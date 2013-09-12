@@ -35,6 +35,6 @@ nosetests.xml
 .pydevproject
 
 # Visual studio
-.sln
-.v11.suo
-.pyproj
+*.sln
+*.v11.suo
+*.pyproj
