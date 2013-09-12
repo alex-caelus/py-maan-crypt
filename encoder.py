@@ -15,7 +15,7 @@ class BaseEncoder:
         """
         Constructor
         """
-        raise BaseException
+        raise NotImplementedError
 
             
 class EncoderEN(BaseEncoder):

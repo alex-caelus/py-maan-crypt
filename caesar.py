@@ -25,4 +25,3 @@ class Caesar(object):
         """
         Decrypt data encrypted using Caesar cipher
         """
-        
