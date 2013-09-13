@@ -22,19 +22,44 @@ class MonoAlphaSubstitution(object):
         """
         Encrypt data.
         Arguments:
-        key: must implement pymaancrypt.encoder.BaseEncoder interface
+        key: scrambled list of the alphabeth to be used as key
+        plaindata: Instance of pymaancrypt.encoder.BaseEncoder
+
+        >>> e.encrypt(list("ENKROYCVDQBFMZSAILHPGTXUJ"), encoder.EncoderEN("Encrypt me!"))
+        'OZKLJAPMOO'
+
         """
-        k = key.getEncoded()
+        
         m = plaindata.getEncoded()
-        return "TEST"
+
+        kIndex = 0
+        encrypted = []
+
+        for c in m:
+            encrypted.append(key[ord(c)-ord('A')])
+
+        return ''.join(encrypted)
         
     def decrypt(self, key, ciperdata):
         """
         Decrypt data.
         """
         pass
+    
+    def generateRandomKeyEN(self, seed):
+        """
+        Generates a 
+        """
+        pass
+
+    def generateRandomKeySV(self, seed):
+        pass
+
+
+def testmodule():
+    import doctest
+    return doctest.testmod(extraglobs={'e': MonoAlphaSubstitution()})
 
 if __name__ == "__main__":
-    m = MonoAlphaSubstitution()
-    encrypted = m.encrypt(encoder.EncoderEN("This is a key"), encoder.EncoderEN(u"Encrypt me!"))
-    print(encrypted)
+    if test()[0] == 0:
+        print("Success!")

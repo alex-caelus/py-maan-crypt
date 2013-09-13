@@ -26,3 +26,9 @@ class Caesar(object):
         Decrypt data encrypted using Caesar cipher
         """
         
+
+
+def testmodule():
+    #implement this please :)
+    import doctest
+    return doctest.testmod(extraglobs={'e': Caesar()})

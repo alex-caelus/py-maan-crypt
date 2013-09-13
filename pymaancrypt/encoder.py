@@ -27,6 +27,9 @@ class BaseEncoder:
     def getEncoded(self):
         return self.encoded
 
+    def getModulo(self):
+        raise NotImplementedError("Is abstract")
+
             
 class EncoderEN(BaseEncoder):
     """
@@ -48,6 +51,9 @@ class EncoderEN(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
+
+    def getModulo(self):
+        return 26
         
         
 class EncoderSV(BaseEncoder):
@@ -71,3 +77,11 @@ class EncoderSV(BaseEncoder):
                 tmp += char
         return tmp.upper()
         
+    def getModulo(self):
+        return 29
+
+
+
+def testmodule():
+    import doctest
+    return doctest.testmod()
