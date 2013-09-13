@@ -11,11 +11,21 @@ class BaseEncoder:
     unencoded = ''
     encoded = ''
 
-    def __init__(self):
+    def __init__(self, text):
         """
         Constructor
         """
-        raise BaseException
+        self.unencoded = text
+        self.encoded = self._encode(text)
+        
+    def _encode(self, text):
+        raise NotImplementedError("Is abstract")
+        
+    def getUnencoded(self):
+        return self.unencoded
+        
+    def getEncoded(self):
+        return self.encoded
 
             
 class EncoderEN(BaseEncoder):
@@ -27,11 +37,10 @@ class EncoderEN(BaseEncoder):
         """
         Constructor
         """
+        #calls super constructor
+        super().__init__(text)
         
-        self.unencoded = text
-        self.encoded = self.encode(text)
-        
-    def encode(self, text):
+    def _encode(self, text):
         """
         """
         tmp = ""
@@ -39,12 +48,6 @@ class EncoderEN(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
-        
-    def getUnencoded(self):
-        return self.unencoded
-        
-    def getEncoded(self):
-        return self.encoded
         
         
 class EncoderSV(BaseEncoder):
@@ -56,11 +59,10 @@ class EncoderSV(BaseEncoder):
         """
         Constructor
         """
+        #calls super constructor
+        super().__init__(text)
         
-        self.unencoded = text
-        self.encoded = self.encode(text)
-        
-    def encode(self, text):
+    def _encode(self, text):
         """
         """
         tmp = ""
@@ -68,10 +70,4 @@ class EncoderSV(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
-        
-    def getUnencoded(self):
-        return self.unencoded
-        
-    def getEncoded(self):
-        return self.encoded
         
