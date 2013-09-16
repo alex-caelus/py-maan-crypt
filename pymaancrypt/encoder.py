@@ -83,5 +83,14 @@ class EncoderSV(BaseEncoder):
 
 
 def testmodule():
+    """
+    Should return (#failed, #tried)
+    """
     import doctest
-    return doctest.testmod()
+    import sys
+    thismodule = sys.modules[__name__]
+    return doctest.testmod(m=thismodule)
+
+if __name__ == "__main__":
+    if testmodule()[0] == 0:
+        print("Success!")

@@ -29,6 +29,14 @@ class Caesar(object):
 
 
 def testmodule():
-    #implement this please :)
+    """
+    Should return (#failed, #tried)
+    """
     import doctest
-    return doctest.testmod(extraglobs={'e': Caesar()})
+    import sys
+    thismodule = sys.modules[__name__]
+    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar()})
+
+if __name__ == "__main__":
+    if testmodule()[0] == 0:
+        print("Success!")

@@ -26,7 +26,7 @@ class MonoAlphaSubstitution(object):
         plaindata: Instance of pymaancrypt.encoder.BaseEncoder
 
         >>> e.encrypt(list("ENKROYCVDQBFMZSAILHPGTXUJ"), encoder.EncoderEN("Encrypt me!"))
-        'OZKLJAPMOO'
+        'OZKLJAPMO'
 
         """
         
@@ -57,9 +57,14 @@ class MonoAlphaSubstitution(object):
 
 
 def testmodule():
+    """
+    Should return (#failed, #tried)
+    """
     import doctest
-    return doctest.testmod(extraglobs={'e': MonoAlphaSubstitution()})
+    import sys
+    thismodule = sys.modules[__name__]
+    return doctest.testmod(m=thismodule, extraglobs={'e': MonoAlphaSubstitution()})
 
 if __name__ == "__main__":
-    if test()[0] == 0:
+    if testmodule()[0] == 0:
         print("Success!")
