@@ -1,5 +1,6 @@
 # import the rest of the package
 
+import snippets
 import monoalphasubstitution
 import transposition
 import caesar
@@ -11,6 +12,15 @@ def run_all_tests(printTotal=False):
     """
     totalfailed = 0
     totalrun = 0
+
+    print("Running tests on snippets module... ")
+    result = snippets.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
+
 
     print("Running tests on encoder module... ")
     result = encoder.testmodule()
