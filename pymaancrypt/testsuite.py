@@ -16,7 +16,7 @@ def run_all_tests(printTotal=False):
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
-        print("\tOK")
+        print("\tOK (%d tests)" % (result[1],))
         # if not OK the test will output the errors
 
 
@@ -25,7 +25,7 @@ def run_all_tests(printTotal=False):
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
-        print("\tOK")
+        print("\tOK (%d tests)" % (result[1],))
         # if not OK the test will output the errors
 
         
@@ -34,11 +34,14 @@ def run_all_tests(printTotal=False):
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
-        print("\tOK")
+        print("\tOK (%d tests)" % (result[1],))
         # if not OK the test will output the errors
 
     if printTotal:
-        print("\nFailed %d of total %d testcases" % (totalfailed, totalrun))
+        if totalfailed == 0:
+            print("\nAll %d tests succeeded!" % (totalrun,))
+        else:
+            print("\nFailed %d of total %d testcases" % (totalfailed, totalrun))
 
     return (totalfailed, totalrun)
 
