@@ -1,6 +1,7 @@
 # import the rest of the package
 
 import monoalphasubstitution
+import transposition
 import caesar
 import encoder
 
@@ -22,6 +23,15 @@ def run_all_tests(printTotal=False):
 
     print("Running tests on monoalphasubstitution module... ")
     result = monoalphasubstitution.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
+
+
+    print("Running tests on transposition module... ")
+    result = transposition.testmodule()
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
