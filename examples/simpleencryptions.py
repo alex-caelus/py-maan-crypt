@@ -9,6 +9,7 @@ if __name__ == "__main__" and __package__ is None:
     
 from pymaancrypt.encoder import EncoderEN, EncoderSV
 from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution
+from pymaancrypt.transposition import ColumnTranspositionCipher
 from pymaancrypt.caesar import Caesar
 
 def getDecryptOrEncrypt():
@@ -17,12 +18,14 @@ def getDecryptOrEncrypt():
 
 def getEncryptorClass():
     while(True):
-        a = input("What cipher do want to use (caesar (c), monoalphasubstitution(m))? ").lower()
+        a = input("Choose chipher caesar(c), monoalphasubstitution(m) or columntransposition(t)? ").lower()
 
         if a in ("c", "caesar"):
             return Caesar
         elif a in ("m", "monoalphasubstitution"):
             return MonoAlphaSubstitution
+        elif a in ("t", "columntransposition"):
+            return ColumnTranspositionCipher
 
 def getEncoderClass():
     while(True):
@@ -67,6 +70,8 @@ def getKey(encryptorClass, encoderClass):
             print("")
             return keyobj
 
+    elif encryptorClass is ColumnTranspositionCipher:
+        return input("Key: ")
 
     else:
         raise AssertionError("Unknown encryptor class!")
@@ -81,18 +86,28 @@ def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
     elif encryptorClass is MonoAlphaSubstitution:
         e = MonoAlphaSubstitution()
         if decrypt:
-            print("Result:" + e.decrypt(keyobj, data))
+            print("Result: " + e.decrypt(keyobj, data))
+        else:
+            print("Result: " + e.encrypt(keyobj, encoderClass(data)))
+
+    elif encryptorClass is ColumnTranspositionCipher:
+        e = ColumnTranspositionCipher()
+        if decrypt:
+            print("Result: " + e.decrypt(keyobj, data))
         else:
             print("Result: " + e.encrypt(keyobj, encoderClass(data)))
 
 def main():
-    
-    decrypt = getDecryptOrEncrypt()
-    encryptorClass = getEncryptorClass()
-    encoderClass = getEncoderClass()
-    keyobj = getKey(encryptorClass, encoderClass)
-    data = input("Data: ")
-    doAction(decrypt, encryptorClass, encoderClass, keyobj, data)
+    try:
+        decrypt = getDecryptOrEncrypt()
+        encryptorClass = getEncryptorClass()
+        encoderClass = getEncoderClass()
+        keyobj = getKey(encryptorClass, encoderClass)
+        data = input("Data: ")
+        doAction(decrypt, encryptorClass, encoderClass, keyobj, data)
+        input("Press enter to exit")
+    except Exception as e:
+        print("Error: " + str(e))
 
 if __name__ == "__main__":
     main()

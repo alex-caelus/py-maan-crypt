@@ -7,8 +7,10 @@ Created on 19 sep 2013
 
 try:
     import encoder
+    import snippets
 except ImportError:
-    import pymaancrypt.encoder
+    import pymaancrypt.encoder as encoder
+    import pymaancrypt.snippets as snippets
 
 class ColumnTranspositionCipher(object):
     """
@@ -28,11 +30,23 @@ class ColumnTranspositionCipher(object):
         key: string
         plaindata: Instance of pymaancrypt.encoder.BaseEncoder
 
-        >>> e.encrypt("HEMLIGT", encoder.EncoderSV("Vi rymmer i gryningen. glöm inte stegen."))
+        >>> e.encrypt("HEMLIGT", encoder.EncoderSV("Vi rymmer i gryningen. Glöm inte stegen."))
         'IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT'
 
+        Each character in key is only used once, thus the following is True
+
+        >>> e.encrypt("SECRETS", encoder.EncoderEN("ENCRYPT ME NOW")) == e.encrypt("SECRT", encoder.EncoderEN("ENCRYPT ME NOW"))
+        True
+
         """
-        key = list(key)
+
+        key = snippets.uniquify(key)
+        
+        if len(key) > len(message.getEncoded()):
+            raise AssertionError("Message longer than key!")
+        
+        sortedkey = sorted(key)
+
         table = {k:[] for k in key}
 
         for idx, val in enumerate(message.getEncoded()):
@@ -41,7 +55,7 @@ class ColumnTranspositionCipher(object):
         
         encrypted = ""
         
-        for k in sorted(key):
+        for k in sortedkey:
             encrypted += ''.join(table[k])
 
         return encrypted
@@ -55,8 +69,18 @@ class ColumnTranspositionCipher(object):
 
         >>> e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
+
+        Each character in key is only used once, thus the following is equivalent
+
+        >>> e.decrypt("SECRETS", "ATBADFGRDAGFDSG") == e.decrypt("SECRT", "ATBADFGRDAGFDSG")
+        True
         """
-        key = list(key)
+
+        key = snippets.uniquify(key)
+        
+        if len(key) > len(ciphermessage):
+            raise AssertionError("Message longer than key!")
+        
         sortedkey = sorted(key)
         table = {k:[] for k in key}
 
