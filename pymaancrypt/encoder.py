@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 12 sep 2013
 
@@ -19,21 +20,40 @@ class BaseEncoder:
         self.encoded = self._encode(text)
         
     def _encode(self, text):
+        """
+        Private, must be implemented by sub class.
+        This method handles the actual encoding
+        """
         raise NotImplementedError("Is abstract")
         
     def getUnencoded(self):
+        """
+        Returns the raw input string
+        """
         return self.unencoded
         
     def getEncoded(self):
+        """
+        Returns the encoded value
+        """
         return self.encoded
 
-    def getModulo(self):
+    def getAlphabet(self):
+        """
+        Gets the alphabet of the encoders language
         raise NotImplementedError("Is abstract")
+        """
 
             
 class EncoderEN(BaseEncoder):
     """
     Encodes english text
+    
+    >>> EncoderEN("This is a (1) english text!").getEncoded()
+    'THISISAENGLISHTEXT'
+
+    >>> EncoderEN("This is a (1) english text!").getUnencoded()
+    'This is a (1) english text!'
     """
     
     def __init__(self, text):
@@ -45,6 +65,7 @@ class EncoderEN(BaseEncoder):
         
     def _encode(self, text):
         """
+        Implemented!
         """
         tmp = ""
         for char in text:
@@ -52,13 +73,26 @@ class EncoderEN(BaseEncoder):
                 tmp += char
         return tmp.upper()
 
-    def getModulo(self):
-        return 26
+    def getAlphabet(self):
+        """
+        Gets the alphabet of the encoders language
+
+        >>> EncoderEN('').getAlphabet()
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        """
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         
         
 class EncoderSV(BaseEncoder):
     """
     Encodes swedish text
+    
+    >>> EncoderSV(u"Detta är en (1) svensk text1").getEncoded()
+    'DETTAÄRENSVENSKTEXT'
+
+    >>> EncoderSV(u"Detta är en (1) svensk text1").getUnencoded()
+    'Detta är en (1) svensk text1'
+
     """
 
     def __init__(self, text):
@@ -76,9 +110,13 @@ class EncoderSV(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
-        
-    def getModulo(self):
-        return 29
+    
+    def getAlphabet(self):
+        """
+        >>> EncoderSV('').getAlphabet()
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'
+        """
+        return "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
 
 
 
