@@ -38,3 +38,6 @@ nosetests.xml
 *.sln
 *.v11.suo
 *.pyproj
+/_UpgradeReport_Files
+/UpgradeLog.htm
+/UpgradeLog.XML

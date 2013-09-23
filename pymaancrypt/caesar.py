@@ -24,4 +24,18 @@ class Caesar(object):
     def decrypt(self, key, ciperdata):
         """
         Decrypt data encrypted using Caesar cipher
-        """
+        """    
+
+
+def testmodule():
+    """
+    Should return (#failed, #tried)
+    """
+    import doctest
+    import sys
+    thismodule = sys.modules[__name__]
+    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar()})
+
+if __name__ == "__main__":
+    if testmodule()[0] == 0:
+        print("Success!")
