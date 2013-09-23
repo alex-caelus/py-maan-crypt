@@ -1,10 +1,17 @@
 # import the rest of the package
 
-import snippets
-import monoalphasubstitution
-import transposition
-import caesar
-import encoder
+try:
+    import snippets
+    import monoalphasubstitution
+    import transposition
+    import caesar
+    import encoder
+except ImportError:
+    import pymaancrypt.snippets
+    import pymaancrypt.monoalphasubstitution
+    import pymaancrypt.transposition
+    import pymaancrypt.caesar
+    import pymaancrypt.encoder
 
 def run_all_tests(printTotal=False):
     """

@@ -43,7 +43,6 @@ class BaseEncoder:
         Gets the alphabet of the encoders language
         raise NotImplementedError("Is abstract")
         """
-
             
 class EncoderEN(BaseEncoder):
     """
@@ -56,11 +55,13 @@ class EncoderEN(BaseEncoder):
     'This is a (1) english text!'
     """
     
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    
     def __init__(self, text):
         """
         Constructor
         """
-        #calls super constructor
+        # calls super constructor
         super().__init__(text)
         
     def _encode(self, text):
@@ -81,7 +82,8 @@ class EncoderEN(BaseEncoder):
         'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         """
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        
+
+    
         
 class EncoderSV(BaseEncoder):
     """
@@ -99,7 +101,7 @@ class EncoderSV(BaseEncoder):
         """
         Constructor
         """
-        #calls super constructor
+        # calls super constructor
         super().__init__(text)
         
     def _encode(self, text):
@@ -117,8 +119,7 @@ class EncoderSV(BaseEncoder):
         'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'
         """
         return "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
-
-
+            
 
 def testmodule():
     """

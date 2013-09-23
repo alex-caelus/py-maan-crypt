@@ -29,7 +29,7 @@ def getEncryptorClass():
 
 def getEncoderClass():
     while(True):
-        a = input("What encoding language do you want to use (english (en), swedish(sv))? ").lower()
+        a = input("What encoding language do you want to use (english(en), swedish(sv))? ").lower()
         
         if a in ("en", "english"):
             return EncoderEN
@@ -38,14 +38,20 @@ def getEncoderClass():
 
 def getKey(encryptorClass, encoderClass):
     if encryptorClass is Caesar:
-
+            
         if encoderClass is EncoderEN:
-            #TODO
-            pass
+            while True:
+                try:
+                    return int(input("Enter key [0-25]: ").lower()) % 26
+                except:
+                    print("Not a valid key, try again")
 
         elif encoderClass is EncoderSV:
-            #TODO
-            pass
+            while True:
+                try:
+                    return int(input("Enter key [0-28]: ").lower()) % 29
+                except:
+                    print("Not a valid key, try again")
 
         else:
             raise AssertionError("Unknown encoder class!")
@@ -79,9 +85,12 @@ def getKey(encryptorClass, encoderClass):
 def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
     
     if encryptorClass is Caesar:
-        #TODO
-        pass
-
+        encoder = encoderClass(data)
+        e = Caesar(encoder.getAlphabet())
+        if decrypt:
+            print("Result: " + e.decrypt(keyobj, data))
+        else:
+            print("Result: " + e.encrypt(keyobj, encoder))
 
     elif encryptorClass is MonoAlphaSubstitution:
         e = MonoAlphaSubstitution()
