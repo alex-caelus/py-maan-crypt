@@ -63,6 +63,14 @@ def run_all_tests(printTotal=False):
     if(result[0] == 0):
         print("\tOK (%d tests)" % (result[1],))
         # if not OK the test will output the errors
+        
+    print("Running tests on onetimepad module... ")
+    result = caesar.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
 
     if printTotal:
         if totalfailed == 0:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Ugly hack to allow absolute import from the root folder
 # whatever its name is. Please forgive the heresy.
 if __name__ == "__main__" and __package__ is None:
@@ -11,6 +12,7 @@ from pymaancrypt.encoder import EncoderEN, EncoderSV
 from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution
 from pymaancrypt.transposition import ColumnTranspositionCipher
 from pymaancrypt.caesar import Caesar
+from pymaancrypt.onetimepad import OneTimePad
 
 def getDecryptOrEncrypt():
     a = input("Encrypt(e) or decrypt(d)? ")
@@ -18,7 +20,7 @@ def getDecryptOrEncrypt():
 
 def getEncryptorClass():
     while(True):
-        a = input("Choose chipher caesar(c), monoalphasubstitution(m) or columntransposition(t)? ").lower()
+        a = input("Choose chipher caesar(c), onetimepad(o), monoalphasubstitution(m) or columntransposition(t)? ").lower()
 
         if a in ("c", "caesar"):
             return Caesar
@@ -26,6 +28,8 @@ def getEncryptorClass():
             return MonoAlphaSubstitution
         elif a in ("t", "columntransposition"):
             return ColumnTranspositionCipher
+        elif a in ("o", "onetimepad"):
+            return OneTimePad
 
 def getEncoderClass():
     while(True):
@@ -56,6 +60,28 @@ def getKey(encryptorClass, encoderClass):
         else:
             raise AssertionError("Unknown encoder class!")
 
+    elif encryptorClass is OneTimePad:
+        
+        if encoderClass is EncoderEN:
+            while True:
+                try:
+                    tmp = input("Enter key [A-Z]: ").upper()
+                    if tmp.isalpha():
+                        return tmp
+                except:
+                    print("Not a valid key, try again")
+
+        elif encoderClass is EncoderSV:
+            while True:
+                try:
+                    tmp = input("Enter key [A-Ö]: ").upper()
+                    if tmp.isalpha():
+                        return tmp
+                except:
+                    print("Not a valid key, try again")
+
+        else:
+            raise AssertionError("Unknown encoder class!")
 
     elif encryptorClass is MonoAlphaSubstitution:
         a = ""
@@ -87,6 +113,14 @@ def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
     if encryptorClass is Caesar:
         encoder = encoderClass(data)
         e = Caesar(encoder.getAlphabet())
+        if decrypt:
+            print("Result: " + e.decrypt(keyobj, data))
+        else:
+            print("Result: " + e.encrypt(keyobj, encoder))
+            
+    elif encryptorClass is OneTimePad:
+        encoder = encoderClass(data)
+        e = OneTimePad(encoder.getAlphabet())
         if decrypt:
             print("Result: " + e.decrypt(keyobj, data))
         else:
