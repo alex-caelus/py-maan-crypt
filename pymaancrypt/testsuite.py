@@ -6,12 +6,14 @@ try:
     import transposition
     import caesar
     import encoder
+    import onetimepad
 except ImportError:
     import pymaancrypt.snippets
     import pymaancrypt.monoalphasubstitution
     import pymaancrypt.transposition
     import pymaancrypt.caesar
     import pymaancrypt.encoder
+    import pymaancrypt.onetimepad
 
 def run_all_tests(printTotal=False):
     """
@@ -65,7 +67,7 @@ def run_all_tests(printTotal=False):
         # if not OK the test will output the errors
         
     print("Running tests on onetimepad module... ")
-    result = caesar.testmodule()
+    result = onetimepad.testmodule()
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
