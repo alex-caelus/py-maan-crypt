@@ -2,18 +2,22 @@
 
 try:
     import snippets
+    import mathfuncs
     import monoalphasubstitution
     import transposition
     import caesar
     import encoder
     import onetimepad
+    import rsa
 except ImportError:
     import pymaancrypt.snippets
+    import pymaancrypt.mathfuncs
     import pymaancrypt.monoalphasubstitution
     import pymaancrypt.transposition
     import pymaancrypt.caesar
     import pymaancrypt.encoder
     import pymaancrypt.onetimepad
+    import pymaancrypt.rsa
 
 def run_all_tests(printTotal=False):
     """
@@ -24,6 +28,14 @@ def run_all_tests(printTotal=False):
 
     print("Running tests on snippets module... ")
     result = snippets.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
+
+    print("Running tests on mathfuncs module... ")
+    result = mathfuncs.testmodule()
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
@@ -68,6 +80,14 @@ def run_all_tests(printTotal=False):
         
     print("Running tests on onetimepad module... ")
     result = onetimepad.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
+        
+    print("Running tests on rsa module... ")
+    result = rsa.testmodule()
     totalfailed += result[0]
     totalrun += result[1]
     if(result[0] == 0):
