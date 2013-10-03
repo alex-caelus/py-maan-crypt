@@ -7,8 +7,10 @@ import random
 
 try:
     import mathfuncs
+    import math
 except ImportError:
     import pymaancrypt.mathfuncs as mathfuncs
+    import math
 
 class RSA(object):
     """
@@ -25,11 +27,35 @@ class RSA(object):
         """
         """
         # c = m^e (mod n)
-        
+        bytes = str.encode(m, encoding='utf_8', errors='strict')
+        encoded = int.from_bytes(bytes, byteorder='little', signed=False)
+        if encoded >= n:
+            raise Exception
+        else:
+            return (encoded**e) % n
+                
     def decrypt(self, n, d, c):
         """
         """
         # m = c^d (mod n)
+        
+    def splitList(self, byteArray, length):
+        """
+        
+        """
+        listOfLists = []
+        while not byteArray:
+            first = byteArray[length:]
+            rest = byteArray[:len(byteArray)-length]
+            
+            if len(first) < length:
+                for i in range((len(first)-length)):
+                    first.insert(i, 0)
+            
+            listOfLists.append(first)
+            byteArray = rest
+        return listOfLists
+                    
 
     def generatePrivatePublicKey(self, bits):
         """
