@@ -13,6 +13,7 @@ from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution
 from pymaancrypt.transposition import ColumnTranspositionCipher
 from pymaancrypt.caesar import Caesar
 from pymaancrypt.onetimepad import OneTimePad
+from pymaancrypt.rsa import RSA
 
 def getDecryptOrEncrypt():
     a = input("Encrypt(e) or decrypt(d)? ")
@@ -20,7 +21,7 @@ def getDecryptOrEncrypt():
 
 def getEncryptorClass():
     while(True):
-        a = input("Choose chipher caesar(c), onetimepad(o), monoalphasubstitution(m) or columntransposition(t)? ").lower()
+        a = input("Choose chipher caesar(c), onetimepad(o), monoalphasubstitution(m), rsa(r) or columntransposition(t)? ").lower()
 
         if a in ("c", "caesar"):
             return Caesar
@@ -30,6 +31,8 @@ def getEncryptorClass():
             return ColumnTranspositionCipher
         elif a in ("o", "onetimepad"):
             return OneTimePad
+        elif a in ("r", "rsa"):
+            return RSA
 
 def getEncoderClass():
     while(True):
@@ -40,7 +43,7 @@ def getEncoderClass():
         elif a in ("sv", "swedish"):
             return EncoderSV
 
-def getKey(encryptorClass, encoderClass):
+def getKey(encryptorClass, encoderClass, decrypt):
     if encryptorClass is Caesar:
             
         if encoderClass is EncoderEN:
@@ -105,6 +108,59 @@ def getKey(encryptorClass, encoderClass):
     elif encryptorClass is ColumnTranspositionCipher:
         return input("Key: ")
 
+    elif encryptorClass is RSA:
+            
+        if decrypt:
+            while True:
+                n = input("Enter N: ").lower()
+                if n.isdigit():
+                    message = ""
+                    if decrypt:
+                        message = "Enter d: "
+                    else:
+                        message = "Enter e: "
+                        
+                    k = input(message).lower()
+                    if k.isdigit():
+                        return [int(n), int(k)]
+                        
+                print("Not a valid key, try again")
+        else:
+            a = ""
+            while a not in ("1", "2"):
+                a = input("Type key into promt(1) or generate random key(2)? ").lower()
+                if a == "1":
+                    while True:
+                        n = input("Enter N: ").lower()
+                        if n.isdigit():
+                            message = ""
+                            if decrypt:
+                                message = "Enter d: "
+                            else:
+                                message = "Enter e: "
+                                
+                            k = input(message).lower()
+                            if k.isdigit():
+                                return [int(n), int(k)]
+                                
+                        print("Not a valid key, try again")
+                else:
+                    while True:
+                        keyLength = input("Enter key length (in bits): ").lower()
+                        if keyLength.isdigit():
+                            keyGen = RSA()
+                            key = keyGen.generatePrivatePublicKey(int(keyLength))
+                            print("Generated key: ")
+                            print("N: " + str(key.getN()))
+                            print("e: " + str(key.getPublicKey()))
+                            print("d: " + str(key.getPrivateKey()))
+                            if decrypt:
+                                return [key.getN(), key.getPrivateKey()]
+                            else:
+                                return [key.getN(), key.getPublicKey()]
+                        else:
+                            print("Not a valid key length, try again")
+                 
     else:
         raise AssertionError("Unknown encryptor class!")
 
@@ -139,13 +195,22 @@ def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
             print("Result: " + e.decrypt(keyobj, data))
         else:
             print("Result: " + e.encrypt(keyobj, encoderClass(data)))
+    elif encryptorClass is RSA:
+        e = RSA()
+        if decrypt:
+            print(keyobj[0], keyobj[1])
+            print("Result: " + str(e.decrypt(keyobj[0], keyobj[1], int(data))))
+        else:
+            print(keyobj[0], keyobj[1])
+            print("Result: " + str(e.encrypt(keyobj[0], keyobj[1], encoderClass(data).getIntegerEncoded())))
+        
 
 def main():
     try:
         decrypt = getDecryptOrEncrypt()
         encryptorClass = getEncryptorClass()
         encoderClass = getEncoderClass()
-        keyobj = getKey(encryptorClass, encoderClass)
+        keyobj = getKey(encryptorClass, encoderClass, decrypt)
         data = input("Data: ")
         doAction(decrypt, encryptorClass, encoderClass, keyobj, data)
         input("Press enter to exit")

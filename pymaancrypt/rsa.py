@@ -27,34 +27,25 @@ class RSA(object):
         """
         """
         # c = m^e (mod n)
-        bytes = str.encode(m, encoding='utf_8', errors='strict')
-        encoded = int.from_bytes(bytes, byteorder='little', signed=False)
-        if encoded >= n:
-            raise Exception
+        #m = int.from_bytes(m.encode(encoding='UTF-8'), byteorder='big', signed=False)
+        #print(m)
+        if m < n:
+            return (m ** e) % n
         else:
-            return (encoded**e) % n
+            raise Exception
+            #c = (m**e) % n
+            #return c.to_bytes((m.bit_length() // 8) + 1, byteorder='big')
                 
     def decrypt(self, n, d, c):
         """
         """
         # m = c^d (mod n)
-        
-    def splitList(self, byteArray, length):
-        """
-        
-        """
-        listOfLists = []
-        while not byteArray:
-            first = byteArray[length:]
-            rest = byteArray[:len(byteArray)-length]
-            
-            if len(first) < length:
-                for i in range((len(first)-length)):
-                    first.insert(i, 0)
-            
-            listOfLists.append(first)
-            byteArray = rest
-        return listOfLists
+        #m = (c ** d) % n
+        #return (m.to_bytes((m.bit_length() // 8) + 1, byteorder='big')).decode(encoding='UTF-8')
+        if c < n:
+            return (c ** d) % n
+        else:
+            raise Exception
                     
 
     def generatePrivatePublicKey(self, bits):

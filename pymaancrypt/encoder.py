@@ -11,6 +11,7 @@ class BaseEncoder:
     """
     unencoded = ''
     encoded = ''
+    integerEncoded = '91'
 
     def __init__(self, text):
         """
@@ -18,11 +19,19 @@ class BaseEncoder:
         """
         self.unencoded = text
         self.encoded = self._encode(text)
+        self.integerEncoded = self._integerEncode(self.encoded)
         
     def _encode(self, text):
         """
         Private, must be implemented by sub class.
         This method handles the actual encoding
+        """
+        raise NotImplementedError("Is abstract")
+    
+    def _integerEncode(self, text):
+        """
+        Private, must be implemented by sub class.
+        This method creates an integer representation of an encoded text
         """
         raise NotImplementedError("Is abstract")
         
@@ -43,6 +52,12 @@ class BaseEncoder:
         Gets the alphabet of the encoders language
         raise NotImplementedError("Is abstract")
         """
+        
+    def getIntegerEncoded(self):
+        """
+        raise NotImplementedError("Is abstract")
+        """
+        return self.integerEncoded
             
 class EncoderEN(BaseEncoder):
     """
@@ -73,6 +88,23 @@ class EncoderEN(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
+    
+    def _integerEncode(self, text):
+        """
+        """
+        if text == "":
+            return -1
+        tmp = ""
+        for char in text:
+            i = self.alphabet.find(char)
+            if i > 0 or i < len(self.alphabet):
+                if i < 10:
+                    tmp += str("0" + str(i + 1))
+                else:
+                    tmp += str(i + 1)
+            else:
+                raise Exception
+        return int(tmp)
 
     def getAlphabet(self):
         """
@@ -97,6 +129,8 @@ class EncoderSV(BaseEncoder):
 
     """
 
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
+
     def __init__(self, text):
         """
         Constructor
@@ -112,6 +146,25 @@ class EncoderSV(BaseEncoder):
             if char.isalpha():
                 tmp += char
         return tmp.upper()
+    
+    def _integerEncode(self, text):
+        """
+        """
+        
+        if text == "":
+            return -1
+        
+        tmp = ""
+        for char in text:
+            i = self.alphabet.find(char)
+            if i > 0 or i < len(self.alphabet):
+                if i < 10:
+                    tmp += str("0" + str(i + 1))
+                else:
+                    tmp += str(i + 1)
+            else:
+                raise Exception
+        return int(tmp)
     
     def getAlphabet(self):
         """
