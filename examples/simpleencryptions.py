@@ -198,10 +198,8 @@ def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
     elif encryptorClass is RSA:
         e = RSA()
         if decrypt:
-            print(keyobj[0], keyobj[1])
             print("Result: " + str(e.decrypt(keyobj[0], keyobj[1], int(data))))
         else:
-            print(keyobj[0], keyobj[1])
             print("Result: " + str(e.encrypt(keyobj[0], keyobj[1], encoderClass(data).getIntegerEncoded())))
         
 

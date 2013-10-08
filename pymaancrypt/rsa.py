@@ -25,23 +25,25 @@ class RSA(object):
         
     def encrypt(self, n, e, m):
         """
+        Encrypts a message represented as an integer using RSA
+        c = m ^ e (mod n)
+        
+        >>> e.encrypt(3411403, 1223, 10203)
+        199979
         """
-        # c = m^e (mod n)
-        #m = int.from_bytes(m.encode(encoding='UTF-8'), byteorder='big', signed=False)
-        #print(m)
         if m < n:
             return (m ** e) % n
         else:
             raise Exception
-            #c = (m**e) % n
-            #return c.to_bytes((m.bit_length() // 8) + 1, byteorder='big')
                 
     def decrypt(self, n, d, c):
         """
+        Decrypts a RSA-message and returns it represented as an integer
+        m = c ^ d (mod n)
+        
+        >>> e.decrypt(3411403, 27847, 199979)
+        10203
         """
-        # m = c^d (mod n)
-        #m = (c ** d) % n
-        #return (m.to_bytes((m.bit_length() // 8) + 1, byteorder='big')).decode(encoding='UTF-8')
         if c < n:
             return (c ** d) % n
         else:
