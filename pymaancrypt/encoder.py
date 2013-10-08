@@ -96,12 +96,12 @@ class EncoderEN(BaseEncoder):
             return -1
         tmp = ""
         for char in text:
-            i = self.alphabet.find(char)
+            i = self.alphabet.find(char) + 1
             if i > 0 or i < len(self.alphabet):
                 if i < 10:
-                    tmp += str("0" + str(i + 1))
+                    tmp += "0" + str(i)
                 else:
-                    tmp += str(i + 1)
+                    tmp += str(i)
             else:
                 raise Exception
         return int(tmp)
@@ -156,12 +156,12 @@ class EncoderSV(BaseEncoder):
         
         tmp = ""
         for char in text:
-            i = self.alphabet.find(char)
+            i = self.alphabet.find(char) + 1
             if i > 0 or i < len(self.alphabet):
                 if i < 10:
-                    tmp += str("0" + str(i + 1))
+                    tmp += "0" + str(i)
                 else:
-                    tmp += str(i + 1)
+                    tmp += str(i)
             else:
                 raise Exception
         return int(tmp)

@@ -32,7 +32,7 @@ class RSA(object):
         199979
         """
         if m < n:
-            return (m ** e) % n
+            return pow(m, e, n)
         else:
             raise Exception
                 
@@ -45,7 +45,7 @@ class RSA(object):
         10203
         """
         if c < n:
-            return (c ** d) % n
+            return pow(c, d, n)
         else:
             raise Exception
                     
