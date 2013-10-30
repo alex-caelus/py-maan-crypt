@@ -72,7 +72,11 @@ class OneTimePad(object):
         15
         """
         key=""
-        s = encodeClass.getAlphabet()
+        try:
+            s = encodeClass.getAlphabet()
+        except:
+            s = encodeClass.getAlphabet(None
+                                        )
         for i in range(length):
             key += s[randint(0, len(s)-1)]
         return key
