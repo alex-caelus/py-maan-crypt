@@ -14,13 +14,11 @@ class Caesar(object):
     '''
     classdocs
     '''
-    alphabet = ""
 
-    def __init__(self, alphabet):
+    def __init__(self):
         """
         Constructor
         """
-        self.alphabet = alphabet
         
     def encrypt(self, key, plaindata):
         """
@@ -33,7 +31,7 @@ class Caesar(object):
         """
         encrypted = ""
         for p in plaindata.getEncoded():
-            encrypted += self.shift(p, key)
+            encrypted += self.shift(p, key, plaindata.getAlphabet())
         return encrypted
         
     def decrypt(self, key, cipherdata):
@@ -46,12 +44,12 @@ class Caesar(object):
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
         decrypted = ""
-        for p in cipherdata:
-            decrypted += self.shift(p, -int(key))
+        for p in cipherdata.getEncoded():
+            decrypted += self.shift(p, -int(key), cipherdata.getAlphabet())
         return decrypted
     
     
-    def shift(self, character, key):
+    def shift(self, character, key, alphabet):
         """
         Shifts the supplied character, the amount of steps specified by key, to the right
         
