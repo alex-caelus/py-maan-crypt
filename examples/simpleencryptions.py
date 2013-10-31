@@ -72,26 +72,32 @@ def getKey(encryptorClass, encoderClass, decrypt):
 
     elif encryptorClass is OneTimePad:
         
-        if encoderClass is EncoderEN:
-            while True:
-                try:
-                    tmp = input("Enter key [A-Z]: ").upper()
-                    if tmp.isalpha():
-                        return tmp
-                except:
-                    print("Not a valid key, try again")
-
-        elif encoderClass is EncoderSV:
-            while True:
-                try:
-                    tmp = input("Enter key [A-Ö]: ").upper()
-                    if tmp.isalpha():
-                        return tmp
-                except:
-                    print("Not a valid key, try again")
-
+        a = ""
+        while a not in ("1", "2"):
+            a = input("Type key into promt(1) or generate random key(2)? ").lower()
+        if a == "1":
+            if encoderClass is EncoderEN:
+                while True:
+                    try:
+                        tmp = input("Enter key [A-Z]: ").upper()
+                        if tmp.isalpha():
+                            return tmp
+                    except:
+                        print("Not a valid key, try again")
+    
+            elif encoderClass is EncoderSV:
+                while True:
+                    try:
+                        tmp = input("Enter key [A-Ö]: ").upper()
+                        if tmp.isalpha():
+                            return tmp
+                    except:
+                        print("Not a valid key, try again")
+    
+            else:
+                raise AssertionError("Unknown encoder class!")
         else:
-            raise AssertionError("Unknown encoder class!")
+            return None
 
     elif encryptorClass is MonoAlphaSubstitution:
         a = ""
