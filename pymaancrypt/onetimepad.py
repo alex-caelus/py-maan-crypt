@@ -48,7 +48,7 @@ class OneTimePad(object):
         """
         Decrypt data
         key: string
-        ciphertext: string
+        ciphertext: Instance of pymaancrypt.encoder.BaseEncoder
         
         >>> e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'

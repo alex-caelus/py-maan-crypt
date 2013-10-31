@@ -38,7 +38,7 @@ class Caesar(object):
         """
         Decrypt data
         key: integer
-        cipherdata: string
+        cipherdata: Instance of pymaancrypt.encoder.BaseEncoder
         
         >>> e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
