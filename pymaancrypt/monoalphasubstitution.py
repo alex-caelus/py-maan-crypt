@@ -18,28 +18,28 @@ class MonoAlphaSubstitution(object):
     "Mono-Alphabetic Substitution Cipher" algorihtm
     """
 
-    def __init__(self):
+    def __init__(self, encoderClass):
         """
         Constructor
+
+        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
+
         """
-        pass
+        self.encoderClass = encoderClass
         
     def encrypt(self, keyobj, plaindata):
         """
         Encrypt data.
         Arguments:
         key: scrambled list of the alphabeth to be used as key
-        plaindata: Instance of pymaancrypt.encoder.BaseEncoder
-
-        >>> e.encrypt(e.makeKey(encoder.EncoderEN("ENKROYCVDQWBFMZSAILHPGTXUJ")), encoder.EncoderEN("Encrypt me!"))
-        'OMKIUSHFO'
-        
-        >>> e.encrypt(e.makeKey(encoder.EncoderSV("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")), encoder.EncoderSV(u"Kryptera mig, åäö!"))
+        plaindata: string
+                
+        >>> e.encrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), "Kryptera mig, åäö!")
         'BIÄÖLOIEMDCXUJ'
 
         """
         
-        m = plaindata.getEncoded()
+        m = self.encoderClass(plaindata).getEncoded()
 
         encrypted = []
 
@@ -58,12 +58,8 @@ class MonoAlphaSubstitution(object):
         
         Here follows some usage examples:
 
-        >>> key = e.makeKey(encoder.EncoderEN("ENKROYCVDQWBFMZSAILHPGTXUJ"))
-        >>> e.decrypt(key, encoder.EncoderEN('OMKIUSHFO'))
-        'ENCRYPTME'
-
-        >>> key = e.makeKey(encoder.EncoderSV("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"))
-        >>> e.decrypt(key, encoder.EncoderSV('BIÄÖLOIEMDCXUJ'))
+        >>> key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
+        >>> e.decrypt(key, 'BIÄÖLOIEMDCXUJ')
         'KRYPTERAMIGÅÄÖ'
         """
         
@@ -74,16 +70,18 @@ class MonoAlphaSubstitution(object):
         takes a encoder.BaseEncoder derived object and converts it to a dictionary with original alphabet as index
 
         Example:
-        >>> key = e.makeKey(encoder.EncoderSV("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"))
+        >>> key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
         >>> key['key'] == {'A': 'E', 'B': 'N', 'C': 'K', 'D': 'R', 'E': 'O', 'F': 'Y', 'G': 'C', 'H': 'V', 'I': 'D', 'J': 'Q', 'K': 'B', 'L': 'F', 'M': 'M', 'N': 'Z', 'O': 'S', 'P': 'Ö', 'Q': 'A', 'R': 'I', 'S': 'Å', 'T': 'L', 'U': 'W', 'V': 'H', 'W': 'P', 'X': 'G', 'Y': 'Ä', 'Z': 'T', 'Ä': 'U', 'Å': 'X', 'Ö': 'J'}
         True
         """
+        input = self.encoderClass(input)
+        inputString = input.getEncoded()
         alphabet = list(input.getAlphabet())
         alphabetLen = len(alphabet)
         i = 0
         keyobj = {'key': {}}
         
-        for k in input.getEncoded():
+        for k in inputString:
             keyobj['key'][alphabet[i]] = k
             i += 1
         
@@ -97,15 +95,15 @@ class MonoAlphaSubstitution(object):
 
         return keyobj
             
-    def generateRandomKey(self, encClass):
+    def generateRandomKey(self):
         """
         Generates a random key form the alphabet of the specified encoder
 
-        >>> len(e.generateRandomKey(encoder.EncoderSV)['key'])
+        >>> len(e.generateRandomKey()['key'])
         29
         """
-        s = encClass.getAlphabet(None)
-        return self.makeKey(encClass(''.join(random.sample(s, len(s)))))
+        s = self.encoderClass.getAlphabet(None)
+        return self.makeKey(''.join(random.sample(s, len(s))))
 
 
 def testmodule():
@@ -115,7 +113,7 @@ def testmodule():
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': MonoAlphaSubstitution()})
+    return doctest.testmod(m=thismodule, extraglobs={'e': MonoAlphaSubstitution(encoder.EncoderSV)})
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
