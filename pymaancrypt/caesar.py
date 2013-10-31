@@ -40,7 +40,7 @@ class Caesar(object):
         key: integer
         cipherdata: Instance of pymaancrypt.encoder.BaseEncoder
         
-        >>> e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
+        >>> e.decrypt(3, encoder.EncoderSV("YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ"))
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
         decrypted = ""
@@ -53,12 +53,12 @@ class Caesar(object):
         """
         Shifts the supplied character, the amount of steps specified by key, to the right
         
-        >>> e.shift('A', 3)
+        >>> e.shift('A', 3, "ABCDEFGHIJKLMNOPQRSTUVWZYZÅÄÖ")
         'D'
         """
-        charIndex = self.alphabet.find(character.upper())
-        newIndex = (charIndex + key) % len(self.alphabet)
-        return self.alphabet[newIndex]
+        charIndex = alphabet.find(character.upper())
+        newIndex = (charIndex + key) % len(alphabet)
+        return alphabet[newIndex]
 
 def testmodule():
     """
@@ -67,7 +67,7 @@ def testmodule():
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar("ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ")})
+    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar()})
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
