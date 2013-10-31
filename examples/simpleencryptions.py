@@ -107,12 +107,12 @@ def getKey(encryptorClass, encoderClass, decrypt):
             while True:
                 try:
                     return MonoAlphaSubstitution().makeKey(
-                                encoderClass(input("Enter key: ")))
+                                input("Enter key: "))
                 except:
                     print("Not a valid key, try again")
         else:
             keyobj = MonoAlphaSubstitution(
-                        ).generateRandomKey(encoderClass)
+                        ).generateRandomKey()
             print("Generated key: ", sep='', end='')
             for k in sorted(keyobj['key'].keys()):
                 print(keyobj['key'][k], sep='', end='')
