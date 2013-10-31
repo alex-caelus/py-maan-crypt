@@ -21,7 +21,9 @@ def getDecryptOrEncrypt():
 
 def getEncryptorClass():
     while(True):
-        a = input("Choose chipher caesar(c), onetimepad(o), monoalphasubstitution(m), rsa(r) or columntransposition(t)? ").lower()
+        a = input("Choose chipher caesar(c), onetimepad(o), "
+                  + "monoalphasubstitution(m), rsa(r) or "
+                  + "columntransposition(t)? ").lower()
 
         if a in ("c", "caesar"):
             return Caesar
@@ -36,7 +38,8 @@ def getEncryptorClass():
 
 def getEncoderClass():
     while(True):
-        a = input("What encoding language do you want to use (english(en), swedish(sv))? ").lower()
+        a = input("What encoding language do you want to use "
+                  +"(english(en), swedish(sv))? ").lower()
         
         if a in ("en", "english"):
             return EncoderEN
@@ -49,14 +52,18 @@ def getKey(encryptorClass, encoderClass, decrypt):
         if encoderClass is EncoderEN:
             while True:
                 try:
-                    return int(input("Enter key [0-25]: ").lower()) % 26
+                    return int(
+                               input("Enter key [0-25]: ").lower()
+                               ) % 26
                 except:
                     print("Not a valid key, try again")
 
         elif encoderClass is EncoderSV:
             while True:
                 try:
-                    return int(input("Enter key [0-28]: ").lower()) % 29
+                    return int(
+                               input("Enter key [0-28]: ").lower()
+                               ) % 29
                 except:
                     print("Not a valid key, try again")
 
@@ -89,16 +96,19 @@ def getKey(encryptorClass, encoderClass, decrypt):
     elif encryptorClass is MonoAlphaSubstitution:
         a = ""
         while a not in ("1", "2"):
-            a = input("Type key into promt(1) or generate random key(2)? ").lower()
+            a = input("Type key into promt(1) or generate "
+                      + "random key(2)? ").lower()
 
         if a == "1":
             while True:
                 try:
-                    return MonoAlphaSubstitution().makeKey(encoderClass(input("Enter key: ")))
+                    return MonoAlphaSubstitution().makeKey(
+                                encoderClass(input("Enter key: ")))
                 except:
                     print("Not a valid key, try again")
         else:
-            keyobj = MonoAlphaSubstitution().generateRandomKey(encoderClass)
+            keyobj = MonoAlphaSubstitution(
+                        ).generateRandomKey(encoderClass)
             print("Generated key: ", sep='', end='')
             for k in sorted(keyobj['key'].keys()):
                 print(keyobj['key'][k], sep='', end='')
@@ -128,7 +138,8 @@ def getKey(encryptorClass, encoderClass, decrypt):
         else:
             a = ""
             while a not in ("1", "2"):
-                a = input("Type key into promt(1) or generate random key(2)? ").lower()
+                a = input("Type key into promt(1) or generate "
+                          + "random key(2)? ").lower()
                 if a == "1":
                     while True:
                         n = input("Enter N: ").lower()
@@ -146,10 +157,13 @@ def getKey(encryptorClass, encoderClass, decrypt):
                         print("Not a valid key, try again")
                 else:
                     while True:
-                        keyLength = input("Enter key length (in bits): ").lower()
+                        keyLength = input(
+                                        "Enter key length (in bits): "
+                                    ).lower()
                         if keyLength.isdigit():
                             keyGen = RSA()
-                            key = keyGen.generatePrivatePublicKey(int(keyLength))
+                            key = keyGen.generatePrivatePublicKey(
+                                                    int(keyLength))
                             print("Generated key: ")
                             print("N: " + str(key.getN()))
                             print("e: " + str(key.getPublicKey()))
@@ -165,42 +179,29 @@ def getKey(encryptorClass, encoderClass, decrypt):
         raise AssertionError("Unknown encryptor class!")
 
 def doAction(decrypt, encryptorClass, encoderClass, keyobj, data):
-    
-    if encryptorClass is Caesar:
-        encoder = encoderClass(data)
-        e = Caesar(encoder.getAlphabet())
-        if decrypt:
-            print("Result: " + e.decrypt(keyobj, data))
-        else:
-            print("Result: " + e.encrypt(keyobj, encoder))
-            
-    elif encryptorClass is OneTimePad:
-        encoder = encoderClass(data)
-        e = OneTimePad(encoder.getAlphabet())
-        if decrypt:
-            print("Result: " + e.decrypt(keyobj, data))
-        else:
-            print("Result: " + e.encrypt(keyobj, encoder))
-
-    elif encryptorClass is MonoAlphaSubstitution:
-        e = MonoAlphaSubstitution()
-        if decrypt:
-            print("Result: " + e.decrypt(keyobj, data))
-        else:
-            print("Result: " + e.encrypt(keyobj, encoderClass(data)))
-
-    elif encryptorClass is ColumnTranspositionCipher:
-        e = ColumnTranspositionCipher()
-        if decrypt:
-            print("Result: " + e.decrypt(keyobj, data))
-        else:
-            print("Result: " + e.encrypt(keyobj, encoderClass(data)))
-    elif encryptorClass is RSA:
+    if encryptorClass is RSA:
+        # RSA has a special interface
         e = RSA()
         if decrypt:
-            print("Result: " + str(e.decrypt(keyobj[0], keyobj[1], int(data))))
+            print("Result: " + str(e.decrypt(keyobj[0], 
+                                             keyobj[1], 
+                                             int(data))))
         else:
-            print("Result: " + str(e.encrypt(keyobj[0], keyobj[1], encoderClass(data).getIntegerEncoded())))
+            print("Result: " 
+                  + str(e.encrypt(keyobj[0], 
+                                  keyobj[1],
+                                  encoderClass(data
+                                  ).getIntegerEncoded())))
+    else:
+        # Every other encryptorClass shares the same interface
+        e = encryptorClass()
+        if decrypt:
+            print("Result: " + e.decrypt(keyobj, 
+                                         encoderClass(data)))
+        else:
+            print("Result: " + e.encrypt(keyobj, 
+                                         encoderClass(data)))
+
         
 
 def main():
