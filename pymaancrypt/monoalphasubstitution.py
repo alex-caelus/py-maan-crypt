@@ -59,15 +59,15 @@ class MonoAlphaSubstitution(object):
         Here follows some usage examples:
 
         >>> key = e.makeKey(encoder.EncoderEN("ENKROYCVDQWBFMZSAILHPGTXUJ"))
-        >>> e.decrypt(key, 'OMKIUSHFO')
+        >>> e.decrypt(key, encoder.EncoderEN('OMKIUSHFO'))
         'ENCRYPTME'
 
         >>> key = e.makeKey(encoder.EncoderSV("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"))
-        >>> e.decrypt(key, 'BIÄÖLOIEMDCXUJ')
+        >>> e.decrypt(key, encoder.EncoderSV('BIÄÖLOIEMDCXUJ'))
         'KRYPTERAMIGÅÄÖ'
         """
         
-        return self.encrypt(keyobj['inverted'], keyobj['encoder'](cipherdata))
+        return self.encrypt(keyobj['inverted'], cipherdata)
 
     def makeKey(self, input):
         """
@@ -88,7 +88,6 @@ class MonoAlphaSubstitution(object):
             i += 1
         
         keyobj["inverted"] = {v:k for k, v in keyobj['key'].items()}
-        keyobj["encoder"] = input.__class__
 
         kLen = len(keyobj['key'])
         iLen = len(keyobj["inverted"] )

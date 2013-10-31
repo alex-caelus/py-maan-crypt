@@ -61,20 +61,21 @@ class ColumnTranspositionCipher(object):
         return encrypted
 
 
-    def decrypt(self, key, ciphermessage):
+    def decrypt(self, key, encrypteddata):
         """
         Decrypt data.
         key: string
         ciphermessage: string
 
-        >>> e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
+        >>> e.decrypt("HEMLIGT", encoder.EncoderSV("IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT"))
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
 
         Each character in key is only used once, thus the following is equivalent
 
-        >>> e.decrypt("SECRETS", "ATBADFGRDAGFDSG") == e.decrypt("SECRT", "ATBADFGRDAGFDSG")
+        >>> e.decrypt("SECRETS", encoder.EncoderEN("ATBADFGRDAGFDSG")) == e.decrypt("SECRT", encoder.EncoderEN("ATBADFGRDAGFDSG"))
         True
         """
+        ciphermessage = encrypteddata.getUnencoded()
 
         key = snippets.uniquify(key)
         
