@@ -14,51 +14,61 @@ class Caesar(object):
     '''
     classdocs
     '''
+    encoder = None
+    alphabet = ""
 
-    def __init__(self):
+    def __init__(self, encoderClass):
         """
         Constructor
         """
+        self.encoder = encoderClass
+        self.alphabet = self.encoder.getAlphabet(None)
         
-    def encrypt(self, key, plaindata):
+    def encrypt(self, key, plaintext):
         """
         Encrypt data
         key: integer
-        plaindata: Instance of pymaancrypt.encoder.BaseEncoder
+        plaintext: string
         
-        >>> e.encrypt(3, encoder.EncoderSV("Vi rymmer i gryningen. Glöm inte stegen."))
+        >>> e.encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
         'YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ'
         """
+        
+        plaintext = self.encoder(plaintext)
+        
         encrypted = ""
-        for p in plaindata.getEncoded():
-            encrypted += self.shift(p, key, plaindata.getAlphabet())
+        for p in plaintext.getEncoded():
+            encrypted += self.shift(p, key)
         return encrypted
         
-    def decrypt(self, key, cipherdata):
+    def decrypt(self, key, ciphertext):
         """
         Decrypt data
         key: integer
-        cipherdata: Instance of pymaancrypt.encoder.BaseEncoder
+        ciphertext: string
         
-        >>> e.decrypt(3, encoder.EncoderSV("YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ"))
+        >>> e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
+        
+        ciphertext = self.encoder(ciphertext)
+        
         decrypted = ""
-        for p in cipherdata.getEncoded():
-            decrypted += self.shift(p, -int(key), cipherdata.getAlphabet())
+        for p in ciphertext.getEncoded():
+            decrypted += self.shift(p, -int(key))
         return decrypted
     
     
-    def shift(self, character, key, alphabet):
+    def shift(self, character, key):
         """
         Shifts the supplied character, the amount of steps specified by key, to the right
         
-        >>> e.shift('A', 3, "ABCDEFGHIJKLMNOPQRSTUVWZYZÅÄÖ")
+        >>> e.shift('A', 3)
         'D'
         """
-        charIndex = alphabet.find(character.upper())
-        newIndex = (charIndex + key) % len(alphabet)
-        return alphabet[newIndex]
+        charIndex = self.alphabet.find(character.upper())
+        newIndex = (charIndex + key) % len(self.alphabet)
+        return self.alphabet[newIndex]
 
 def testmodule():
     """
@@ -67,7 +77,7 @@ def testmodule():
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar()})
+    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar(encoder.EncoderSV)})
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
