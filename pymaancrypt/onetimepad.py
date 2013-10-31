@@ -38,7 +38,7 @@ class OneTimePad(object):
         plaintext = self.encoder(plaintext)
         
         if key is None:
-                key = self.generateRandomKey(plaintext, len(plaintext.getEncoded()))
+                key = self.generateRandomKey(len(plaintext.getEncoded()))
                 print("Generated key: " + key)
         encrypted = ""
         i = 0
