@@ -5,7 +5,6 @@ Created on 24 sep 2013
 @author: Marcus
 '''
 from random import randint
-from pymaancrypt.encoder import EncoderEN
 
 try:
     import encoder
@@ -16,37 +15,36 @@ class OneTimePad(object):
     '''
     classdocs
     '''
-    alphabet = ""
 
     def __init__(self, alphabet):
         '''
         Constructor
         '''
-        self.alphabet = alphabet
         
     def encrypt(self, key, plaindata):
         """
         Encrypt data
         key: string
-        plaintext: string
+        plaindata: Instance of pymaancrypt.encoder.BaseEncoder
         
         >>> e.encrypt("SECRET", encoder.EncoderSV("Vi rymmer i gryningen. Glöm inte stegen."))
         'KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR'
         """
+        alphabet = plaindata.getAlphabet()
         if key is None:
                 key = self.generateRandomKey(plaindata, len(plaindata.getEncoded()))
                 print("Generated key: " + key)
         encrypted = ""
         i = 0
         for p in plaindata.getEncoded():
-            currIndex = self.alphabet.find(p.upper())
-            keyIndex = self.alphabet.find(key[i].upper())
-            encrypted += self.alphabet[(currIndex + keyIndex)%len(self.alphabet)]
+            currIndex = alphabet.find(p.upper())
+            keyIndex = alphabet.find(key[i].upper())
+            encrypted += alphabet[(currIndex + keyIndex)%len(alphabet)]
             i = (i + 1) % len(key)
         
         return encrypted
         
-    def decrypt(self, key, ciphertext):
+    def decrypt(self, key, cipherdata):
         """
         Decrypt data
         key: string
@@ -55,12 +53,13 @@ class OneTimePad(object):
         >>> e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
+        alphabet = cipherdata.getAlphabet()
         decrypted = ""
         i = 0
-        for p in ciphertext:
-            currIndex = self.alphabet.find(p.upper())
-            keyIndex = self.alphabet.find(key[i].upper())
-            decrypted += self.alphabet[(currIndex - keyIndex)%len(self.alphabet)]
+        for p in cipherdata.getEncoded():
+            currIndex = alphabet.find(p.upper())
+            keyIndex = alphabet.find(key[i].upper())
+            decrypted += alphabet[(currIndex - keyIndex)%len(alphabet)]
             i = (i + 1) % len(key)
         return decrypted
     
@@ -75,8 +74,7 @@ class OneTimePad(object):
         try:
             s = encodeClass.getAlphabet()
         except:
-            s = encodeClass.getAlphabet(None
-                                        )
+            s = encodeClass.getAlphabet(None)
         for i in range(length):
             key += s[randint(0, len(s)-1)]
         return key
