@@ -16,7 +16,7 @@ class OneTimePad(object):
     classdocs
     '''
 
-    def __init__(self, alphabet):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -50,7 +50,7 @@ class OneTimePad(object):
         key: string
         ciphertext: Instance of pymaancrypt.encoder.BaseEncoder
         
-        >>> e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
+        >>> e.decrypt("SECRET", encoder.EncoderSV("KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR"))
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
         alphabet = cipherdata.getAlphabet()
@@ -86,7 +86,7 @@ def testmodule():
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': OneTimePad("ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ")})
+    return doctest.testmod(m=thismodule, extraglobs={'e': OneTimePad()})
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
