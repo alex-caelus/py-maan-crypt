@@ -13,7 +13,6 @@ from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution
 from pymaancrypt.transposition import ColumnTranspositionCipher
 from pymaancrypt.caesar import Caesar
 from pymaancrypt.onetimepad import OneTimePad
-from pymaancrypt.rsa import RSA
 
 def getDecryptOrEncrypt():
     a = input("Encrypt(e) or decrypt(d)? ")

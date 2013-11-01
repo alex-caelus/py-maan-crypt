@@ -108,6 +108,24 @@ def egcd(a, b):
         b,a, x,y, u,v = a,r, u,v, m,n
     return b, x, y
 
+def floorPowerOf(a, p):
+    """
+    This function floors a to the closest number that is a power of p
+
+    Examples:
+
+    >>> floorPowerOf(6, 2)
+    4
+    >>> floorPowerOf(8, 2)
+    8
+    >>> floorPowerOf(9, 2)
+    8
+    >>> floorPowerOf(31.99, 2)
+    16
+    """
+    return p ** math.floor(math.log(a, p))
+
+
 def testmodule():
     """
     Should return (#failed, #tried)
