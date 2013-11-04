@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Ugly hack to allow absolute import from the root folder
 # whatever its name is. Please forgive the heresy.
 if __name__ == "__main__" and __package__ is None:

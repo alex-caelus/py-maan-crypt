@@ -1,4 +1,3 @@
-﻿# -*- coding: utf-8 -*-
 # Ugly hack to allow absolute import from the root folder
 # whatever its name is. Please forgive the heresy.
 if __name__ == "__main__" and __package__ is None:
@@ -8,7 +7,6 @@ if __name__ == "__main__" and __package__ is None:
     path.append(dir(path[0]))
     __package__ = "examples"
     
-import pymaancrypt
 from pymaancrypt.rsa import RSA
 
 def getDecryptOrEncrypt():
@@ -93,7 +91,10 @@ def getData():
         a = input("Read data from console(c) or file(f)?").lower()
         
         if a == "c":
-            return input("Type data as one line, end with ENTER: ")
+            return bytearray(
+                        input(
+                            "Type data as one line, end with ENTER: ")
+                            , 'utf-8')
         elif a == "f":
             while True:
                 f = open(input("Enter path to data file: "), "rb")
