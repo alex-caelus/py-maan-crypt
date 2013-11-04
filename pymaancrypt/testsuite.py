@@ -1,23 +1,24 @@
 # import the rest of the package
 
-try:
-    import snippets
-    import mathfuncs
-    import monoalphasubstitution
-    import transposition
-    import caesar
-    import encoder
-    import onetimepad
-    import rsa
-except ImportError:
-    import pymaancrypt.snippets
-    import pymaancrypt.mathfuncs
-    import pymaancrypt.monoalphasubstitution
-    import pymaancrypt.transposition
-    import pymaancrypt.caesar
-    import pymaancrypt.encoder
-    import pymaancrypt.onetimepad
-    import pymaancrypt.rsa
+# Ugly hack to allow absolute import from the root folder
+# whatever its name is. Please forgive the heresy.
+if __name__ == "__main__" and __package__ is None:
+    from sys import path
+    from os.path import dirname as dir
+
+    path.append(dir(path[0]))
+    __package__ = "pymaancrypt"
+    import pymaancrypt
+
+from . import snippets
+from . import mathfuncs
+from . import monoalphasubstitution
+from . import transposition
+from . import caesar
+from . import encoder
+from . import onetimepad
+from . import rsa
+from . import blockmodes
 
 def run_all_tests(printTotal=False):
     """
@@ -93,6 +94,14 @@ def run_all_tests(printTotal=False):
     if(result[0] == 0):
         print("\tOK (%d tests)" % (result[1],))
         # if not OK the test will output the errors
+        
+    print("Running tests on blockmodes module... ")
+    result = blockmodes.testmodule()
+    totalfailed += result[0]
+    totalrun += result[1]
+    if(result[0] == 0):
+        print("\tOK (%d tests)" % (result[1],))
+        # if not OK the test will output the errors
 
     if printTotal:
         if totalfailed == 0:
@@ -101,6 +110,8 @@ def run_all_tests(printTotal=False):
             print("\nFailed %d of total %d testcases" % (totalfailed, totalrun))
 
     return (totalfailed, totalrun)
+
+
 
 if __name__ == "__main__":
     run_all_tests(True)

@@ -5,12 +5,8 @@ Created on 19 sep 2013
 @author: Alexander
 """
 
-try:
-    import encoder
-    import snippets
-except ImportError:
-    import pymaancrypt.encoder as encoder
-    import pymaancrypt.snippets as snippets
+from . import encoder
+from . import snippets
 
 class ColumnTranspositionCipher(object):
     """
@@ -18,27 +14,32 @@ class ColumnTranspositionCipher(object):
     "Transposition Cipher" algorihtm
     """
 
-    def __init__(self):
+    def __init__(self, encoderClass):
         """
         Constructor
+
+        >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
+
         """
-        pass
+        self.encoderClass = encoderClass
         
-    def encrypt(self, key, message):
+    def encrypt(self, key, input):
         """
         Encrypt data.
         key: string
-        plaindata: Instance of pymaancrypt.encoder.BaseEncoder
+        plaindata: text string
 
-        >>> e.encrypt("HEMLIGT", encoder.EncoderSV("Vi rymmer i gryningen. Glöm inte stegen."))
+        >>> e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
         'IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT'
 
         Each character in key is only used once, thus the following is True
 
-        >>> e.encrypt("SECRETS", encoder.EncoderEN("ENCRYPT ME NOW")) == e.encrypt("SECRT", encoder.EncoderEN("ENCRYPT ME NOW"))
+        >>> e.encrypt("SECRETS", "ENCRYPT ME NOW") == e.encrypt("SECRT", "ENCRYPT ME NOW")
         True
 
         """
+
+        message = self.encoderClass(input)
 
         key = snippets.uniquify(key)
         
@@ -111,7 +112,7 @@ def testmodule():
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': ColumnTranspositionCipher()})
+    return doctest.testmod(m=thismodule, extraglobs={'e': ColumnTranspositionCipher(encoder.EncoderSV)})
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
