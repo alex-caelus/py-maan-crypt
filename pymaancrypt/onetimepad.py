@@ -6,10 +6,7 @@ Created on 24 sep 2013
 '''
 from random import randint
 
-try:
-    import encoder
-except ImportError:
-    import pymaancrypt.encoder
+from . import encoder
 
 class OneTimePad(object):
     '''
