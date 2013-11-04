@@ -110,7 +110,9 @@ def egcd(a, b):
 
 def floorPowerOf(a, p):
     """
-    This function floors a to the closest number that is a power of p
+    This function floors a to the closest number 
+    that is a power of p and <= a
+
 
     Examples:
 
