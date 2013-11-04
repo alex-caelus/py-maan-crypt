@@ -52,11 +52,17 @@ def getKey(decrypt):
                 print("N: " + str(key.getN()))
                 print("e: " + str(key.getPublicKey()))
                 print("d: " + str(key.getPrivateKey()))
-                a = input("Do you want to save this key to a key-file (y/n)?: ")
+                a = input("Do you want to save this key to a "
+                          +"key-file (y/n)?: ")
                 if a == "y":
-                    f = open(input("Path to file (warning: file will be overwritten if it exists): "), "w")
+                    f = open(input("Path to file (warning: file will "
+                                   +"be overwritten if it exists): ")
+                             , "w")
                     try:
-                        f.writelines([str(key.getN())+'\n', str(key.getPublicKey())+'\n', str(key.getPrivateKey())+'\n'])
+                        f.writelines(
+                                     [str(key.getN())+'\n'
+                                     , str(key.getPublicKey())+'\n'
+                                     , str(key.getPrivateKey())+'\n'])
                     except Exception as e:
                         print("Error: " + str(e))
                     finally:

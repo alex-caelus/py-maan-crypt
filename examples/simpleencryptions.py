@@ -9,7 +9,7 @@ if __name__ == "__main__" and __package__ is None:
     __package__ = "examples"
     
 from pymaancrypt.encoder import EncoderEN, EncoderSV
-from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution
+from pymaancrypt.monoalphasubstitution import MonoAlphaSubstitution    
 from pymaancrypt.transposition import ColumnTranspositionCipher
 from pymaancrypt.caesar import Caesar
 from pymaancrypt.onetimepad import OneTimePad
@@ -71,7 +71,8 @@ def getKey(encryptorClass, encoderClass, decrypt):
         
         a = ""
         while a not in ("1", "2"):
-            a = input("Type key into promt(1) or generate random key(2)? ").lower()
+            a = input("Type key into promt(1) or generate random "
+                      + "key(2)? ").lower()
         if a == "1":
             if encoderClass is EncoderEN:
                 while True:
