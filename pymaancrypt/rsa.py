@@ -29,7 +29,7 @@ class RSA(object):
         c = m ^ e (mod n)
         
         >>> e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
-        bytearray(b'\\x00\\x955')
+        bytearray(b'\\xab-\\x00')
         """
         m = int.from_bytes(message, 'little')
         n = keyobj.getN()
@@ -47,7 +47,7 @@ class RSA(object):
         Decrypts a RSA-message and returns it represented as an integer
         m = c ^ d (mod n)
         
-        >>> e.decrypt(bytearray(b'\\x00\\x955'), e.makeKeyObject(78563, private=43411)).decode()
+        >>> e.decrypt(bytearray(b'\\xab-\\x00'), e.makeKeyObject(78563, private=43411)).decode()
         'Hi'
         """
         c = int.from_bytes(message, 'little')
@@ -75,7 +75,7 @@ class RSA(object):
         1-2 is because there is a fifty percent probability of the most significant 
         bit beeing a 0, which is not counted when represented as a number.
 
-        >>> key = RSA().generatePrivatePublicKey(512)
+        >>> key = e.generatePrivatePublicKey(512)
         >>> isinstance( key.getPublicKey(), int)
         True
         >>> isinstance( key.getPrivateKey(), int)
