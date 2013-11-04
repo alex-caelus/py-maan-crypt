@@ -1,10 +1,7 @@
 ﻿# -*- coding: utf-8 -*-
 
 import math
-try:
-    import mathfuncs
-except ImportError:
-    import pymaancrypt.mathfuncs
+from . import mathfuncs
 
 
 class __DummyEncryptor__:

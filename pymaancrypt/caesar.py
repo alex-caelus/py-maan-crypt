@@ -5,10 +5,7 @@ Created on 12 sep 2013
 @author: Marcus
 '''
 
-try:
-    import encoder
-except ImportError:
-    import pymaancrypt.encoder
+from . import encoder
 
 class Caesar(object):
     '''

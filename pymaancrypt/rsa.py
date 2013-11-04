@@ -4,13 +4,9 @@ Created on 26 sep 2013
 @author: Marcus
 """
 import random
+import math
 
-try:
-    import mathfuncs
-    import math
-except ImportError:
-    import pymaancrypt.mathfuncs as mathfuncs
-    import math
+from . import mathfuncs
 
 class RSA(object):
     """

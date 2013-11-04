@@ -5,12 +5,8 @@ Created on 19 sep 2013
 @author: Alexander
 """
 
-try:
-    import encoder
-    import snippets
-except ImportError:
-    import pymaancrypt.encoder as encoder
-    import pymaancrypt.snippets as snippets
+from . import encoder
+from . import snippets
 
 class ColumnTranspositionCipher(object):
     """

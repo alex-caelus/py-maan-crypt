@@ -7,10 +7,7 @@ Created on 12 sep 2013
 
 import random
 
-try:
-    import encoder
-except ImportError:
-    import pymaancrypt.encoder
+from . import encoder
 
 class MonoAlphaSubstitution(object):
     """
