@@ -3,6 +3,20 @@
 Created on 19 sep 2013
 
 @author: Alexander
+
+Column Transposition Cipher
+====================
+
+Module for column transposition cipher encryption and decryption
+
+Example
+-------
+
+> e = ColumnTranspositionCipher(encoder.EncoderSV)
+
+> c = e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
+
+> m = e.decrypt("HEMLIGT", c)
 """
 
 from . import encoder
@@ -68,15 +82,15 @@ class ColumnTranspositionCipher(object):
         key: string
         ciphermessage: string
 
-        >>> e.decrypt("HEMLIGT", encoder.EncoderSV("IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT"))
+        >>> e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
 
         Each character in key is only used once, thus the following is equivalent
 
-        >>> e.decrypt("SECRETS", encoder.EncoderEN("ATBADFGRDAGFDSG")) == e.decrypt("SECRT", encoder.EncoderEN("ATBADFGRDAGFDSG"))
+        >>> e.decrypt("SECRETS", "ATBADFGRDAGFDSG") == e.decrypt("SECRT", "ATBADFGRDAGFDSG")
         True
         """
-        ciphermessage = encrypteddata.getUnencoded()
+        ciphermessage = encrypteddata
 
         key = snippets.uniquify(key)
         

@@ -3,6 +3,20 @@
 Created on 12 sep 2013
 
 @author: Marcus
+
+Caesar cipher
+=============
+
+Module for Caesar encryption and decryption.
+
+Example
+-------
+
+> e = Caesar(encoder.EncoderEN)
+
+> c = e.encrypt("Hello world!", 10)
+
+> m = e.decrypt(c , 10)
 '''
 
 from . import encoder
