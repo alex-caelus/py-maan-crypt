@@ -34,10 +34,6 @@ def getKey(decrypt):
                     if e.isdigit():
                         return RSA().makeKeyObject(n, public=e)
                         
-                k = input(message).lower()
-                if k.isdigit():
-                    return [int(n), int(k)]
-                        
             print("Not a valid key, try again")
 
     elif choice == "a":

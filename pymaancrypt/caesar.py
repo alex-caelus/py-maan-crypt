@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 12 sep 2013
-
-@author: Marcus
-
-Caesar cipher
-=============
-
 Module for Caesar encryption and decryption.
 
 Example
--------
 
-> e = Caesar(encoder.EncoderEN)
-
-> c = e.encrypt("Hello world!", 10)
-
-> m = e.decrypt(c , 10)
+>>> e = Caesar(encoder.EncoderSV)
+>>> c = e.encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
+>>> m = e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
 '''
 
 from . import encoder
@@ -26,7 +16,7 @@ class Caesar(object):
     classdocs
     '''
     encoder = None
-    alphabet = ""
+    alphabet = None
 
     def __init__(self, encoderClass):
         """

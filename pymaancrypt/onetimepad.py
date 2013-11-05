@@ -1,22 +1,12 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 24 sep 2013
-
-@author: Marcus
-
-One time pad cipher
-===================
-
 Module for One time pad encryption and decryption
 
 Example
--------
 
-> e = OneTimePad(encoder.EncoderEN)
-
-> c = e.encrypt("SECRET", "Hello world!")
-
-> m = e.decrypt("SECRET", c)
+>>> e = OneTimePad(encoder.EncoderSV)
+>>> c = e.encrypt("SECRET", "Vi rymmer i gryningen. Glöm inte stegen.")
+>>> m = e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
 '''
 from random import randint
 
@@ -27,7 +17,7 @@ class OneTimePad(object):
     classdocs
     '''
     encoder = None
-    alphabet = ""
+    alphabet = None
 
     def __init__(self, encoderClass):
         '''

@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 12 sep 2013
-
-@author: Marcus
-
-Encoder
-=======
-
 Module for text encoding
-
 '''
 
 class BaseEncoder:

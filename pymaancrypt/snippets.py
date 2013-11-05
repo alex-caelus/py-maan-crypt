@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on 19 sep 2013
-
-@author: Alexander
+Module containing arbitrary help functions
 """
 
 def uniquify(seq):

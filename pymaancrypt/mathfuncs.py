@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on 27 sep 2013
-
-@author: Alexander
+Module containing mathematical help functions
 """
 import random
 import math
 import decimal
-import fractions
 
 def millerRabinPrimalityTest(n, certainty=decimal.Decimal('0.995')):
     """

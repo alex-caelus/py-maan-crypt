@@ -1,22 +1,13 @@
 ﻿# -*- coding: utf-8 -*-
 """
-Created on 19 sep 2013
-
-@author: Alexander
-
-Column Transposition Cipher
-====================
-
 Module for column transposition cipher encryption and decryption
 
 Example
--------
 
-> e = ColumnTranspositionCipher(encoder.EncoderSV)
 
-> c = e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
-
-> m = e.decrypt("HEMLIGT", c)
+>>> e = ColumnTranspositionCipher(encoder.EncoderSV)
+>>> c = e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
+>>> m = e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
 """
 
 from . import encoder
@@ -37,11 +28,11 @@ class ColumnTranspositionCipher(object):
         """
         self.encoderClass = encoderClass
         
-    def encrypt(self, key, input):
+    def encrypt(self, key, plaintext):
         """
         Encrypt data.
         key: string
-        plaindata: text string
+        plaintext: string
 
         >>> e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
         'IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT'
@@ -101,7 +92,6 @@ class ColumnTranspositionCipher(object):
         table = {k:[] for k in key}
 
         decrypted = []
-        index = 0
 
         itemspercolumn = len(ciphermessage)//len(key)
         start = 0

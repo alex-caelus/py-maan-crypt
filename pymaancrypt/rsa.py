@@ -1,21 +1,11 @@
 """
-Created on 26 sep 2013
-
-@author: Marcus
-
-RSA
-===
-
 Module for RSA encryption and decryption.
 
 Example
 -------
-
-> e = RSA()
-
-> c = e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
-
-> m = e.decrypt(bytearray(b'\\xab-\\x00'), e.makeKeyObject(78563, private=43411)).decode()
+>>> e = RSA()
+>>> c = e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
+>>> m = e.decrypt(bytearray(b'\\xab-\\x00'), e.makeKeyObject(78563, private=43411)).decode()
 """
 import random
 import math

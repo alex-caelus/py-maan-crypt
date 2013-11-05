@@ -127,7 +127,7 @@ class ECB(BaseBlockMode):
                 if index < len(data):
                     c[j] = data[index]
             m = self.encryptor.decrypt(c, keyobj)
-            for mb in c:
+            for mb in m:
                 M.append(mb)
 
         return M
