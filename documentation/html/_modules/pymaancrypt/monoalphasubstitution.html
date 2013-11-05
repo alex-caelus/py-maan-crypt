@@ -54,6 +54,20 @@
 <span class="sd">Created on 12 sep 2013</span>
 
 <span class="sd">@author: Alexander</span>
+
+<span class="sd">Monoalphabetic substitution cipher</span>
+<span class="sd">==================================</span>
+
+<span class="sd">Module for mono-alphabetic substitution encryption and decryption</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+
+<span class="sd">&gt; e = MonoAlphaSubstitution(encoder.EncoderSV)</span>
+
+<span class="sd">&gt; c = e.encrypt(e.makeKey(&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;), &quot;Kryptera mig, åäö!&quot;)</span>
+
+<span class="sd">&gt; m = e.decrypt(e.makeKey(&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;), c)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">random</span>

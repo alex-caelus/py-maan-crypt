@@ -10,6 +10,18 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   
+This is a automatically generated documentation of Py-Maan-Crypt!
+
+It consists of the package documented below.
+
+If you want examples please take a look at the `examples` directory where you will find
+two complete example programs.
+
+pymaancrypt Package
+===================
+
+This is the package where the magic is done.
 
 :mod:`blockmodes` Module
 ------------------------
@@ -90,8 +102,6 @@ Contents:
     :members:
     :undoc-members:
     :show-inheritance:
-
-
 
 
 Indices and tables

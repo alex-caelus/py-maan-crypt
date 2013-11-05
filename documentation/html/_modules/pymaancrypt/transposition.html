@@ -54,6 +54,20 @@
 <span class="sd">Created on 19 sep 2013</span>
 
 <span class="sd">@author: Alexander</span>
+
+<span class="sd">Column Transposition Cipher</span>
+<span class="sd">====================</span>
+
+<span class="sd">Module for column transposition cipher encryption and decryption</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+
+<span class="sd">&gt; e = ColumnTranspositionCipher(encoder.EncoderSV)</span>
+
+<span class="sd">&gt; c = e.encrypt(&quot;HEMLIGT&quot;, &quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;)</span>
+
+<span class="sd">&gt; m = e.decrypt(&quot;HEMLIGT&quot;, c)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">encoder</span>
@@ -119,15 +133,15 @@
 <span class="sd">        key: string</span>
 <span class="sd">        ciphermessage: string</span>
 
-<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;HEMLIGT&quot;, encoder.EncoderSV(&quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;HEMLIGT&quot;, &quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;)</span>
 <span class="sd">        &#39;VIRYMMERIGRYNINGENGLÖMINTESTEGEN&#39;</span>
 
 <span class="sd">        Each character in key is only used once, thus the following is equivalent</span>
 
-<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;SECRETS&quot;, encoder.EncoderEN(&quot;ATBADFGRDAGFDSG&quot;)) == e.decrypt(&quot;SECRT&quot;, encoder.EncoderEN(&quot;ATBADFGRDAGFDSG&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;SECRETS&quot;, &quot;ATBADFGRDAGFDSG&quot;) == e.decrypt(&quot;SECRT&quot;, &quot;ATBADFGRDAGFDSG&quot;)</span>
 <span class="sd">        True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ciphermessage</span> <span class="o">=</span> <span class="n">encrypteddata</span><span class="o">.</span><span class="n">getUnencoded</span><span class="p">()</span>
+        <span class="n">ciphermessage</span> <span class="o">=</span> <span class="n">encrypteddata</span>
 
         <span class="n">key</span> <span class="o">=</span> <span class="n">snippets</span><span class="o">.</span><span class="n">uniquify</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         
