@@ -4,7 +4,6 @@ Module for column transposition cipher encryption and decryption
 
 Example
 
-
 >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
 >>> c = e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
 >>> m = e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
@@ -17,34 +16,40 @@ class ColumnTranspositionCipher(object):
     """
     Provides encryption and decryption mechanics using the 
     "Transposition Cipher" algorihtm
+
+    :param encoderClass: Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.
+
+    >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
     """
 
     def __init__(self, encoderClass):
         """
         Constructor
-
-        >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
-
         """
         self.encoderClass = encoderClass
         
     def encrypt(self, key, plaintext):
         """
         Encrypt data.
-        key: string
-        plaintext: string
+        
+        :param key: string
+        :param plaintext: string
 
+        Example
+        
+        >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
         >>> e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
         'IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT'
 
         Each character in key is only used once, thus the following is True
-
+        
+        >>> e = ColumnTranspositionCipher(encoder.EncoderEN)
         >>> e.encrypt("SECRETS", "ENCRYPT ME NOW") == e.encrypt("SECRT", "ENCRYPT ME NOW")
         True
 
         """
 
-        message = self.encoderClass(input)
+        message = self.encoderClass(plaintext)
 
         key = snippets.uniquify(key)
         
@@ -72,12 +77,14 @@ class ColumnTranspositionCipher(object):
         Decrypt data.
         key: string
         ciphermessage: string
-
+        
+        >>> e = ColumnTranspositionCipher(encoder.EncoderSV)
         >>> e.decrypt("HEMLIGT", "IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
 
         Each character in key is only used once, thus the following is equivalent
-
+        
+        >>> e = ColumnTranspositionCipher(encoder.EncoderEN)
         >>> e.decrypt("SECRETS", "ATBADFGRDAGFDSG") == e.decrypt("SECRT", "ATBADFGRDAGFDSG")
         True
         """
@@ -111,12 +118,22 @@ class ColumnTranspositionCipher(object):
 
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': ColumnTranspositionCipher(encoder.EncoderSV)})
+    return doctest.testmod(m=thismodule)
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:

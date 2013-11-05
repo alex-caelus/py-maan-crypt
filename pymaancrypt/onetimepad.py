@@ -14,10 +14,12 @@ from . import encoder
 
 class OneTimePad(object):
     '''
-    classdocs
+    Class for the One-Time-Pad encryption scheme.
+
+    :param encoderClass: Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.
+
+    >>> e = OneTimePad(encoder.EncoderSV)
     '''
-    encoder = None
-    alphabet = None
 
     def __init__(self, encoderClass):
         '''
@@ -29,9 +31,14 @@ class OneTimePad(object):
     def encrypt(self, key, plaintext):
         """
         Encrypt data
-        key: string
-        plaintext: string
+
+        :param key: string
+        :param plaintext: string
+        :returns: string
         
+        Examples:
+
+        >>> e = OneTimePad(encoder.EncoderSV)
         >>> e.encrypt("SECRET", "Vi rymmer i gryningen. Glöm inte stegen.")
         'KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR'
         """
@@ -54,9 +61,12 @@ class OneTimePad(object):
     def decrypt(self, key, ciphertext):
         """
         Decrypt data
-        key: string
-        ciphertext: string
+
+        :param key: string
+        :param ciphertext: string
+        :returns: ciphertext
         
+        >>> e = OneTimePad(encoder.EncoderSV)
         >>> e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
@@ -74,8 +84,12 @@ class OneTimePad(object):
     
     def generateRandomKey(self, length):
         """
-        Generates a random key form the alphabet of the specified encoder
+        Generates a random key form the alphabet of the specified encoder (argument to constructor)
+        
+        :param length: The length of the generated key
+        :returns: A stiring of random letters
 
+        >>> e = OneTimePad(encoder.EncoderSV)
         >>> len(e.generateRandomKey(15))
         15
         """
@@ -84,15 +98,26 @@ class OneTimePad(object):
         for i in range(length):
             key += s[randint(0, len(s)-1)]
         return key
-        
+
+
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': OneTimePad(encoder.EncoderSV)})
+    return doctest.testmod(m=thismodule)
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:

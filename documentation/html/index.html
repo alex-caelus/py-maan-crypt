@@ -48,7 +48,6 @@
             
   <div class="section" id="welcome-to-py-maan-crypt-s-documentation">
 <h1>Welcome to Py-Maan-Crypt&#8217;s documentation!<a class="headerlink" href="#welcome-to-py-maan-crypt-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul class="simple">
 </ul>
@@ -57,39 +56,136 @@
 <p>It consists of the package documented below.</p>
 <p>If you want examples please take a look at the <cite>examples</cite> directory where you will find
 two complete example programs.</p>
-</div>
-<div class="section" id="pymaancrypt-package">
-<h1>pymaancrypt Package<a class="headerlink" href="#pymaancrypt-package" title="Permalink to this headline">¶</a></h1>
-<p>This is the package where the magic is done.</p>
 <div class="section" id="module-pymaancrypt.blockmodes">
 <span id="blockmodes-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">blockmodes</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.blockmodes" title="Permalink to this headline">¶</a></h2>
+<p>A module containing classes for cipher block chaining modes.</p>
+<p>The <cite>BaseBlockMode</cite> is a supposed to define a common interface for all blockmodes.</p>
+<p>Currently only the Electronic Code Book mode is implemented.</p>
+<p>Construction of a block mode takes an encryptor object and a blocklength (in bits) as parameters.</p>
+<p>Encryption and decryption is then done as in the following example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">keyobj</span> <span class="o">=</span> <span class="bp">None</span> <span class="c">#Should be a real key based on whatever encryption scheme you use.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="s">&quot;Hello, I&#39;m a long text that must be divided into several blocks&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blockmode</span> <span class="o">=</span> <span class="n">ECB</span><span class="p">(</span><span class="n">__DummyEncryptor__</span><span class="p">(),</span> <span class="mi">32</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encrypted</span> <span class="o">=</span> <span class="n">blockmode</span><span class="o">.</span><span class="n">encryptFromString</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decrypted</span> <span class="o">=</span> <span class="n">blockmode</span><span class="o">.</span><span class="n">decryptToString</span><span class="p">(</span><span class="n">encrypted</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decrypted</span> <span class="o">==</span> <span class="n">message</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>You may also use the <cite>blockmode.encryptByteArray</cite> and <cite>blockmode.decryptByteArray</cite> instead of the FromString and ToString variants used above.</p>
 <dl class="class">
 <dt id="pymaancrypt.blockmodes.BaseBlockMode">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.blockmodes.</tt><tt class="descname">BaseBlockMode</tt><big>(</big><em>encryptor</em>, <em>maxBlockLength</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>Base class for all block modes</p>
-<dl class="method">
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>encryptor</strong> &#8211; The encryptor object (see below) that handles the actual encryption of a block.</li>
+<li><strong>maxBlockLength</strong> &#8211; The block length (integer) in bits.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Base class for all block modes, this should not be used except as a base class for those who wish to
+define their own blockmode.</p>
+<p>Any class who inherits from this class should only need to override the <cite>encryptByteArray</cite> and <cite>decryptByteArray</cite>.</p>
+<p>The constructor takes an encryptor object (with encrypt and decrypt methods) and block length (integer) in bits.</p>
+<p>The encryptor must implement the following interface:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ExampleEncryptor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataAsBytearray</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="c">#returns a bytearray</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataAsByteArray</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="c">#returns a bytearray</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.BaseBlockMode.decryptByteArray">
-<tt class="descname">decryptByteArray</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.decryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.decryptByteArray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decryption method</p>
+<tt class="descname">decryptByteArray</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.decryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.decryptByteArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypts an array of bytes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Bytearray of data to decrypt</li>
+<li><strong>keyobj</strong> &#8211; Object to pass on to the decrypt method of the <cite>encryptor</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.BaseBlockMode.decryptToString">
-<tt class="descname">decryptToString</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.decryptToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.decryptToString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience method for decrypting a bytearray, return type is utf-8 encoded string</p>
+<tt class="descname">decryptToString</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.decryptToString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.decryptToString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for decrypting data to a string (utf-8 encoded).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; bytearray of data to decrypt.</li>
+<li><strong>keyobj</strong> &#8211; The key that is passed on to the decryption scheme.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A utf-8 encoded string.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.BaseBlockMode.encryptByteArray">
-<tt class="descname">encryptByteArray</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.encryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.encryptByteArray" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encryption method</p>
+<tt class="descname">encryptByteArray</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.encryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.encryptByteArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypts a variable length array of bytes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Bytearray of data to encrypt</li>
+<li><strong>keyobj</strong> &#8211; Object to pass on to the encrypt method of the <cite>encryptor</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.BaseBlockMode.encryptFromString">
-<tt class="descname">encryptFromString</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.encryptFromString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.encryptFromString" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience method for encrypting a string of data, return type is bytearray</p>
+<tt class="descname">encryptFromString</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#BaseBlockMode.encryptFromString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.BaseBlockMode.encryptFromString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for encrypting a string (utf-8 encoded) of data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; string to encrypt.</li>
+<li><strong>keyobj</strong> &#8211; The key that is passed on to the encryption scheme.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -100,11 +196,40 @@ two complete example programs.</p>
 <dd><p>Bases: <a class="reference internal" href="#pymaancrypt.blockmodes.BaseBlockMode" title="pymaancrypt.blockmodes.BaseBlockMode"><tt class="xref py py-class docutils literal"><span class="pre">pymaancrypt.blockmodes.BaseBlockMode</span></tt></a></p>
 <p>Electronic code book block encryption scheme, this is the least secure of all 
 block modes and should only be used for educational purposes</p>
-<dl class="method">
+<p>See <a class="reference internal" href="#pymaancrypt.blockmodes.BaseBlockMode" title="pymaancrypt.blockmodes.BaseBlockMode"><tt class="xref py py-class docutils literal"><span class="pre">BaseBlockMode</span></tt></a> for further documentaton on constructor arguments and usage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>encryptor</strong> &#8211; The encryptor object that handles the actual encryption of a block.</li>
+<li><strong>maxBlockLength</strong> &#8211; The block length (integer) in bits.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.ECB.decryptByteArray">
-<tt class="descname">decryptByteArray</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#ECB.decryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.ECB.decryptByteArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decryptByteArray</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#ECB.decryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.ECB.decryptByteArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypts a variable length bytearray with the provided encryptor with the ECB
 block scheme.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Bytearray of data to decrypt</li>
+<li><strong>keyobj</strong> &#8211; Object to pass on to the decrypt method of the <cite>encryptor</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Padding will not be removed since there is no way to detrimine if trailing zeroes are part of plaintext or not.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="bp">True</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">__DummyEncryptor__</span><span class="p">()</span>
 <span class="gp">... </span>    <span class="n">ecb</span> <span class="o">=</span> <span class="n">ECB</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
@@ -114,13 +239,27 @@ block scheme.</p>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.blockmodes.ECB.encryptByteArray">
-<tt class="descname">encryptByteArray</tt><big>(</big><em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#ECB.encryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.ECB.encryptByteArray" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">encryptByteArray</tt><big>(</big><em>self</em>, <em>data</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#ECB.encryptByteArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.ECB.encryptByteArray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encrypts a variable length bytearray with the provided encryptor with the ECB
 block scheme.</p>
-<p>padding will be all zeroes due to the fact that encryption expects 
-a c-style string as payload</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> &#8211; Bytearray of data to encrypt</li>
+<li><strong>keyobj</strong> &#8211; Object to pass on to the encrypt method of the <cite>encryptor</cite></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>This implementation uses zeroes for padding.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="bp">True</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">e</span> <span class="o">=</span> <span class="n">__DummyEncryptor__</span><span class="p">()</span>
 <span class="gp">... </span>    <span class="n">ecb</span> <span class="o">=</span> <span class="n">ECB</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
@@ -136,66 +275,83 @@ a c-style string as payload</p>
 <dl class="function">
 <dt id="pymaancrypt.blockmodes.testmodule">
 <tt class="descclassname">pymaancrypt.blockmodes.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/blockmodes.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.blockmodes.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
 <div class="section" id="module-pymaancrypt.caesar">
 <span id="caesar-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">caesar</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.caesar" title="Permalink to this headline">¶</a></h2>
-<p>Created on 12 sep 2013</p>
-<p>&#64;author: Marcus</p>
-<div class="section" id="caesar-cipher">
-<h3>Caesar cipher<a class="headerlink" href="#caesar-cipher" title="Permalink to this headline">¶</a></h3>
 <p>Module for Caesar encryption and decryption.</p>
-<div class="section" id="example">
-<h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
-<p>&gt; e = Caesar(encoder.EncoderEN)</p>
-<p>&gt; c = e.encrypt(&#8220;Hello world!&#8221;, 10)</p>
-<p>&gt; m = e.decrypt(c , 10)</p>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">Caesar</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pymaancrypt.caesar.Caesar">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.caesar.</tt><tt class="descname">Caesar</tt><big>(</big><em>encoderClass</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>classdocs</p>
-<dl class="attribute">
-<dt id="pymaancrypt.caesar.Caesar.alphabet">
-<tt class="descname">alphabet</tt><em class="property"> = ''</em><a class="headerlink" href="#pymaancrypt.caesar.Caesar.alphabet" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
+<p>Encryptor class for the Caesar encryption scheme</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoderClass</strong> &#8211; Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.</td>
+</tr>
+</tbody>
+</table>
+<dl class="function">
 <dt id="pymaancrypt.caesar.Caesar.decrypt">
-<tt class="descname">decrypt</tt><big>(</big><em>key</em>, <em>ciphertext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.decrypt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>ciphertext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.decrypt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypt data
 key: integer
 ciphertext: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Caesar</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ&quot;</span><span class="p">)</span>
 <span class="go">&#39;VIRYMMERIGRYNINGENGLÖMINTESTEGEN&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pymaancrypt.caesar.Caesar.encoder">
-<tt class="descname">encoder</tt><em class="property"> = None</em><a class="headerlink" href="#pymaancrypt.caesar.Caesar.encoder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.caesar.Caesar.encrypt">
-<tt class="descname">encrypt</tt><big>(</big><em>key</em>, <em>plaintext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.encrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encrypt data
-key: integer
-plaintext: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<tt class="descname">encrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>plaintext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> &#8211; integer</li>
+<li><strong>plaintext</strong> &#8211; string</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Caesar</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
 <span class="go">&#39;YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.caesar.Caesar.shift">
-<tt class="descname">shift</tt><big>(</big><em>character</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.shift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.shift" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">shift</tt><big>(</big><em>self</em>, <em>character</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#Caesar.shift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.Caesar.shift" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shifts the supplied character, the amount of steps specified by key, to the right</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Caesar</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">&#39;D&#39;</span>
 </pre></div>
 </div>
@@ -206,51 +362,65 @@ plaintext: string</p>
 <dl class="function">
 <dt id="pymaancrypt.caesar.testmodule">
 <tt class="descclassname">pymaancrypt.caesar.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/caesar.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.caesar.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
-</div>
-</div>
 <div class="section" id="module-pymaancrypt.encoder">
 <span id="encoder-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">encoder</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.encoder" title="Permalink to this headline">¶</a></h2>
-<p>Created on 12 sep 2013</p>
-<p>&#64;author: Marcus</p>
-<div class="section" id="encoder">
-<h3>Encoder<a class="headerlink" href="#encoder" title="Permalink to this headline">¶</a></h3>
 <p>Module for text encoding</p>
 <dl class="class">
 <dt id="pymaancrypt.encoder.BaseEncoder">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.encoder.</tt><tt class="descname">BaseEncoder</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Text encoder base class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> &#8211; The string to be encoded (encapsulated)</td>
+</tr>
+</tbody>
+</table>
 <dl class="attribute">
 <dt id="pymaancrypt.encoder.BaseEncoder.encoded">
 <tt class="descname">encoded</tt><em class="property"> = ''</em><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.encoded" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.BaseEncoder.getAlphabet">
-<tt class="descname">getAlphabet</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getAlphabet" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getAlphabet</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getAlphabet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the alphabet of the encoders language
 raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.BaseEncoder.getEncoded">
-<tt class="descname">getEncoded</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getEncoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getEncoded" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getEncoded</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getEncoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getEncoded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the encoded value</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.BaseEncoder.getIntegerEncoded">
-<tt class="descname">getIntegerEncoded</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getIntegerEncoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getIntegerEncoded" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getIntegerEncoded</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getIntegerEncoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getIntegerEncoded" title="Permalink to this definition">¶</a></dt>
 <dd><p>raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.BaseEncoder.getUnencoded">
-<tt class="descname">getUnencoded</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getUnencoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getUnencoded" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getUnencoded</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#BaseEncoder.getUnencoded"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.BaseEncoder.getUnencoded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the raw input string</p>
 </dd></dl>
 
@@ -270,7 +440,7 @@ raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 <dt id="pymaancrypt.encoder.EncoderEN">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.encoder.</tt><tt class="descname">EncoderEN</tt><big>(</big><em>text</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#EncoderEN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.EncoderEN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pymaancrypt.encoder.BaseEncoder" title="pymaancrypt.encoder.BaseEncoder"><tt class="xref py py-class docutils literal"><span class="pre">pymaancrypt.encoder.BaseEncoder</span></tt></a></p>
-<p>Encodes english text</p>
+<p>Encodes english text.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">EncoderEN</span><span class="p">(</span><span class="s">&quot;This is a (1) english text!&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getEncoded</span><span class="p">()</span>
 <span class="go">&#39;THISISAENGLISHTEXT&#39;</span>
 </pre></div>
@@ -284,9 +454,9 @@ raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 <tt class="descname">alphabet</tt><em class="property"> = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'</em><a class="headerlink" href="#pymaancrypt.encoder.EncoderEN.alphabet" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.EncoderEN.getAlphabet">
-<tt class="descname">getAlphabet</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#EncoderEN.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.EncoderEN.getAlphabet" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getAlphabet</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#EncoderEN.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.EncoderEN.getAlphabet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the alphabet of the encoders language</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">EncoderEN</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getAlphabet</span><span class="p">()</span>
 <span class="go">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;</span>
@@ -314,9 +484,9 @@ raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 <tt class="descname">alphabet</tt><em class="property"> = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ'</em><a class="headerlink" href="#pymaancrypt.encoder.EncoderSV.alphabet" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.encoder.EncoderSV.getAlphabet">
-<tt class="descname">getAlphabet</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#EncoderSV.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.EncoderSV.getAlphabet" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">getAlphabet</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#EncoderSV.getAlphabet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.EncoderSV.getAlphabet" title="Permalink to this definition">¶</a></dt>
 <dd><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">EncoderSV</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getAlphabet</span><span class="p">()</span>
 <span class="go">&#39;ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ&#39;</span>
 </pre></div>
@@ -328,15 +498,31 @@ raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 <dl class="function">
 <dt id="pymaancrypt.encoder.testmodule">
 <tt class="descclassname">pymaancrypt.encoder.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/encoder.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.encoder.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
-</div>
 <div class="section" id="module-pymaancrypt.mathfuncs">
 <span id="mathfuncs-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">mathfuncs</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.mathfuncs" title="Permalink to this headline">¶</a></h2>
-<p>Created on 27 sep 2013</p>
-<p>&#64;author: Alexander</p>
+<p>Module containing mathematical help functions.</p>
+<p>These functions are designed to be used standalone, so the following import should work just fine:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pymaancrypt.mathfuncs</span> <span class="kn">import</span> <span class="n">millerRabinPrimalityTest</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">millerRabinPrimalityTest</span><span class="p">(</span><span class="mi">12345</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="function">
 <dt id="pymaancrypt.mathfuncs.egcd">
 <tt class="descclassname">pymaancrypt.mathfuncs.</tt><tt class="descname">egcd</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/mathfuncs.html#egcd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.mathfuncs.egcd" title="Permalink to this definition">¶</a></dt>
@@ -344,6 +530,11 @@ raise NotImplementedError(&#8220;Is abstract&#8221;)</p>
 take positive integers a, b as input, and return a triple (g, x, y), such that ax + by = g = gcd(a, b).</p>
 <p>source code taken from:
 <a class="reference external" href="http://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm">http://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm</a></p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">egcd</span><span class="p">(</span><span class="mi">1235437658</span><span class="p">,</span> <span class="mi">876342</span><span class="p">)</span>
+<span class="go">(2, -113363, 159815368)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -368,6 +559,11 @@ that is a power of p and &lt;= a</p>
 <dt id="pymaancrypt.mathfuncs.gcd">
 <tt class="descclassname">pymaancrypt.mathfuncs.</tt><tt class="descname">gcd</tt><big>(</big><em>a</em>, <em>b</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/mathfuncs.html#gcd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.mathfuncs.gcd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Caclulates the gcd of two numbers.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">gcd</span><span class="p">(</span><span class="mi">1235437658</span><span class="p">,</span> <span class="mi">876342</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -402,71 +598,144 @@ that is a power of p and &lt;= a</p>
 <dl class="function">
 <dt id="pymaancrypt.mathfuncs.testmodule">
 <tt class="descclassname">pymaancrypt.mathfuncs.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/mathfuncs.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.mathfuncs.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
 <div class="section" id="module-pymaancrypt.monoalphasubstitution">
 <span id="monoalphasubstitution-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">monoalphasubstitution</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.monoalphasubstitution" title="Permalink to this headline">¶</a></h2>
-<p>Created on 12 sep 2013</p>
-<p>&#64;author: Alexander</p>
-<div class="section" id="monoalphabetic-substitution-cipher">
-<h3>Monoalphabetic substitution cipher<a class="headerlink" href="#monoalphabetic-substitution-cipher" title="Permalink to this headline">¶</a></h3>
 <p>Module for mono-alphabetic substitution encryption and decryption</p>
-<div class="section" id="id1">
-<h4>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
-<p>&gt; e = MonoAlphaSubstitution(encoder.EncoderSV)</p>
-<p>&gt; c = e.encrypt(e.makeKey(&#8220;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&#8221;), &#8220;Kryptera mig, åäö!&#8221;)</p>
-<p>&gt; m = e.decrypt(e.makeKey(&#8220;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&#8221;), c)</p>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">),</span> <span class="s">&quot;Kryptera mig, åäö!&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">),</span> <span class="s">&quot;BIÄÖLOIEMDCXUJ&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.monoalphasubstitution.</tt><tt class="descname">MonoAlphaSubstitution</tt><big>(</big><em>encoderClass</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Provides encryption and decryption mechanics using the 
 &#8220;Mono-Alphabetic Substitution Cipher&#8221; algorihtm</p>
-<dl class="method">
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoderClass</strong> &#8211; Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
 <dt id="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt">
-<tt class="descname">decrypt</tt><big>(</big><em>keyobj</em>, <em>cipherdata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decrypt</tt><big>(</big><em>self</em>, <em>keyobj</em>, <em>cipherdata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypt data.</p>
-<p>Here follows some usage examples:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">)</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keyobj</strong> &#8211; Special object as returned by <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey"><tt class="xref py py-meth docutils literal"><span class="pre">makeKey()</span></tt></a> method</li>
+<li><strong>cipherdata</strong> &#8211; string to decrypt</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s">&#39;BIÄÖLOIEMDCXUJ&#39;</span><span class="p">)</span>
 <span class="go">&#39;KRYPTERAMIGÅÄÖ&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt">
-<tt class="descname">encrypt</tt><big>(</big><em>keyobj</em>, <em>plaindata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encrypt data.
-Arguments:
-key: scrambled list of the alphabeth to be used as key
-plaindata: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">),</span> <span class="s">&quot;Kryptera mig, åäö!&quot;</span><span class="p">)</span>
+<tt class="descname">encrypt</tt><big>(</big><em>self</em>, <em>keyobj</em>, <em>plaindata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypts a string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keyobj</strong> &#8211; Special object as returned by <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey"><tt class="xref py py-meth docutils literal"><span class="pre">makeKey()</span></tt></a> method</li>
+<li><strong>plaindata</strong> &#8211; string to encrypt</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">),</span> <span class="s">&quot;Kryptera mig, åäö!&quot;</span><span class="p">)</span>
 <span class="go">&#39;BIÄÖLOIEMDCXUJ&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.generateRandomKey">
-<tt class="descname">generateRandomKey</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.generateRandomKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.generateRandomKey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a random key form the alphabet of the specified encoder</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">generateRandomKey</span><span class="p">()[</span><span class="s">&#39;key&#39;</span><span class="p">])</span>
+<tt class="descname">generateRandomKey</tt><big>(</big><em>self</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.generateRandomKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.generateRandomKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a random key from the alphabet of the specified encoder (in constructor)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Internal representation of a key, as used by the <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt"><tt class="xref py py-meth docutils literal"><span class="pre">encrypt()</span></tt></a> and <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt"><tt class="xref py py-meth docutils literal"><span class="pre">decrypt()</span></tt></a> methods.</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">generateRandomKey</span><span class="p">()[</span><span class="s">&#39;key&#39;</span><span class="p">])</span>
 <span class="go">29</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey">
-<tt class="descname">makeKey</tt><big>(</big><em>input</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.makeKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey" title="Permalink to this definition">¶</a></dt>
-<dd><p>takes a encoder.BaseEncoder derived object and converts it to a dictionary with original alphabet as index</p>
-<p>Example:
-&gt;&gt;&gt; key = e.makeKey(&#8220;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&#8221;)
-&gt;&gt;&gt; key[&#8216;key&#8217;] == {&#8216;A&#8217;: &#8216;E&#8217;, &#8216;B&#8217;: &#8216;N&#8217;, &#8216;C&#8217;: &#8216;K&#8217;, &#8216;D&#8217;: &#8216;R&#8217;, &#8216;E&#8217;: &#8216;O&#8217;, &#8216;F&#8217;: &#8216;Y&#8217;, &#8216;G&#8217;: &#8216;C&#8217;, &#8216;H&#8217;: &#8216;V&#8217;, &#8216;I&#8217;: &#8216;D&#8217;, &#8216;J&#8217;: &#8216;Q&#8217;, &#8216;K&#8217;: &#8216;B&#8217;, &#8216;L&#8217;: &#8216;F&#8217;, &#8216;M&#8217;: &#8216;M&#8217;, &#8216;N&#8217;: &#8216;Z&#8217;, &#8216;O&#8217;: &#8216;S&#8217;, &#8216;P&#8217;: &#8216;Ö&#8217;, &#8216;Q&#8217;: &#8216;A&#8217;, &#8216;R&#8217;: &#8216;I&#8217;, &#8216;S&#8217;: &#8216;Å&#8217;, &#8216;T&#8217;: &#8216;L&#8217;, &#8216;U&#8217;: &#8216;W&#8217;, &#8216;V&#8217;: &#8216;H&#8217;, &#8216;W&#8217;: &#8216;P&#8217;, &#8216;X&#8217;: &#8216;G&#8217;, &#8216;Y&#8217;: &#8216;Ä&#8217;, &#8216;Z&#8217;: &#8216;T&#8217;, &#8216;Ä&#8217;: &#8216;U&#8217;, &#8216;Å&#8217;: &#8216;X&#8217;, &#8216;Ö&#8217;: &#8216;J&#8217;}
-True</p>
+<tt class="descname">makeKey</tt><big>(</big><em>self</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#MonoAlphaSubstitution.makeKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.makeKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a alphabet as a string and converts it to a dictionary with the standard alphabet as index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> &#8211; String containing the entire alphabet in a random order.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Internal representation of a key, as used by the <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.encrypt"><tt class="xref py py-meth docutils literal"><span class="pre">encrypt()</span></tt></a> and <a class="reference internal" href="#pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt" title="pymaancrypt.monoalphasubstitution.MonoAlphaSubstitution.decrypt"><tt class="xref py py-meth docutils literal"><span class="pre">decrypt()</span></tt></a> methods.</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">MonoAlphaSubstitution</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKey</span><span class="p">(</span><span class="s">&quot;ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span><span class="p">[</span><span class="s">&#39;key&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{</span><span class="s">&#39;A&#39;</span><span class="p">:</span> <span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;B&#39;</span><span class="p">:</span> <span class="s">&#39;N&#39;</span><span class="p">,</span> <span class="s">&#39;C&#39;</span><span class="p">:</span> <span class="s">&#39;K&#39;</span><span class="p">,</span> <span class="s">&#39;D&#39;</span><span class="p">:</span> <span class="s">&#39;R&#39;</span><span class="p">,</span> <span class="s">&#39;E&#39;</span><span class="p">:</span> <span class="s">&#39;O&#39;</span><span class="p">,</span> <span class="s">&#39;F&#39;</span><span class="p">:</span> <span class="s">&#39;Y&#39;</span><span class="p">,</span> <span class="s">&#39;G&#39;</span><span class="p">:</span> <span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="s">&#39;H&#39;</span><span class="p">:</span> <span class="s">&#39;V&#39;</span><span class="p">,</span> <span class="s">&#39;I&#39;</span><span class="p">:</span> <span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;J&#39;</span><span class="p">:</span> <span class="s">&#39;Q&#39;</span><span class="p">,</span> <span class="s">&#39;K&#39;</span><span class="p">:</span> <span class="s">&#39;B&#39;</span><span class="p">,</span> <span class="s">&#39;L&#39;</span><span class="p">:</span> <span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;M&#39;</span><span class="p">:</span> <span class="s">&#39;M&#39;</span><span class="p">,</span> <span class="s">&#39;N&#39;</span><span class="p">:</span> <span class="s">&#39;Z&#39;</span><span class="p">,</span> <span class="s">&#39;O&#39;</span><span class="p">:</span> <span class="s">&#39;S&#39;</span><span class="p">,</span> <span class="s">&#39;P&#39;</span><span class="p">:</span> <span class="s">&#39;Ö&#39;</span><span class="p">,</span> <span class="s">&#39;Q&#39;</span><span class="p">:</span> <span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="s">&#39;R&#39;</span><span class="p">:</span> <span class="s">&#39;I&#39;</span><span class="p">,</span> <span class="s">&#39;S&#39;</span><span class="p">:</span> <span class="s">&#39;Å&#39;</span><span class="p">,</span> <span class="s">&#39;T&#39;</span><span class="p">:</span> <span class="s">&#39;L&#39;</span><span class="p">,</span> <span class="s">&#39;U&#39;</span><span class="p">:</span> <span class="s">&#39;W&#39;</span><span class="p">,</span> <span class="s">&#39;V&#39;</span><span class="p">:</span> <span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;W&#39;</span><span class="p">:</span> <span class="s">&#39;P&#39;</span><span class="p">,</span> <span class="s">&#39;X&#39;</span><span class="p">:</span> <span class="s">&#39;G&#39;</span><span class="p">,</span> <span class="s">&#39;Y&#39;</span><span class="p">:</span> <span class="s">&#39;Ä&#39;</span><span class="p">,</span> <span class="s">&#39;Z&#39;</span><span class="p">:</span> <span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;Ä&#39;</span><span class="p">:</span> <span class="s">&#39;U&#39;</span><span class="p">,</span> <span class="s">&#39;Å&#39;</span><span class="p">:</span> <span class="s">&#39;X&#39;</span><span class="p">,</span> <span class="s">&#39;Ö&#39;</span><span class="p">:</span> <span class="s">&#39;J&#39;</span><span class="p">}</span>
+<span class="go">True</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -474,68 +743,116 @@ True</p>
 <dl class="function">
 <dt id="pymaancrypt.monoalphasubstitution.testmodule">
 <tt class="descclassname">pymaancrypt.monoalphasubstitution.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/monoalphasubstitution.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.monoalphasubstitution.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
-</div>
-</div>
 <div class="section" id="module-pymaancrypt.onetimepad">
 <span id="onetimepad-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">onetimepad</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.onetimepad" title="Permalink to this headline">¶</a></h2>
-<p>Created on 24 sep 2013</p>
-<p>&#64;author: Marcus</p>
-<div class="section" id="one-time-pad-cipher">
-<h3>One time pad cipher<a class="headerlink" href="#one-time-pad-cipher" title="Permalink to this headline">¶</a></h3>
 <p>Module for One time pad encryption and decryption</p>
-<div class="section" id="id2">
-<h4>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
-<p>&gt; e = OneTimePad(encoder.EncoderEN)</p>
-<p>&gt; c = e.encrypt(&#8220;SECRET&#8221;, &#8220;Hello world!&#8221;)</p>
-<p>&gt; m = e.decrypt(&#8220;SECRET&#8221;, c)</p>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">OneTimePad</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pymaancrypt.onetimepad.OneTimePad">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.onetimepad.</tt><tt class="descname">OneTimePad</tt><big>(</big><em>encoderClass</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>classdocs</p>
-<dl class="attribute">
-<dt id="pymaancrypt.onetimepad.OneTimePad.alphabet">
-<tt class="descname">alphabet</tt><em class="property"> = ''</em><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.alphabet" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
+<p>Class for the One-Time-Pad encryption scheme.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoderClass</strong> &#8211; Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">OneTimePad</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
 <dt id="pymaancrypt.onetimepad.OneTimePad.decrypt">
-<tt class="descname">decrypt</tt><big>(</big><em>key</em>, <em>ciphertext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.decrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Decrypt data
-key: string
-ciphertext: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR&quot;</span><span class="p">)</span>
+<tt class="descname">decrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>ciphertext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> &#8211; string</li>
+<li><strong>ciphertext</strong> &#8211; string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">ciphertext</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">OneTimePad</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR&quot;</span><span class="p">)</span>
 <span class="go">&#39;VIRYMMERIGRYNINGENGLÖMINTESTEGEN&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="pymaancrypt.onetimepad.OneTimePad.encoder">
-<tt class="descname">encoder</tt><em class="property"> = None</em><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.encoder" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.onetimepad.OneTimePad.encrypt">
-<tt class="descname">encrypt</tt><big>(</big><em>key</em>, <em>plaintext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.encrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encrypt data
-key: string
-plaintext: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<tt class="descname">encrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>plaintext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> &#8211; string</li>
+<li><strong>plaintext</strong> &#8211; string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">OneTimePad</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRET&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
 <span class="go">&#39;KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.onetimepad.OneTimePad.generateRandomKey">
-<tt class="descname">generateRandomKey</tt><big>(</big><em>length</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.generateRandomKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.generateRandomKey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a random key form the alphabet of the specified encoder</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">generateRandomKey</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
+<tt class="descname">generateRandomKey</tt><big>(</big><em>self</em>, <em>length</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#OneTimePad.generateRandomKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.OneTimePad.generateRandomKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a random key form the alphabet of the specified encoder (argument to constructor)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>length</strong> &#8211; The length of the generated key</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A stiring of random letters</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">OneTimePad</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">generateRandomKey</span><span class="p">(</span><span class="mi">15</span><span class="p">))</span>
 <span class="go">15</span>
 </pre></div>
 </div>
@@ -546,62 +863,117 @@ plaintext: string</p>
 <dl class="function">
 <dt id="pymaancrypt.onetimepad.testmodule">
 <tt class="descclassname">pymaancrypt.onetimepad.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/onetimepad.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.onetimepad.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
-</div>
-</div>
 <div class="section" id="module-pymaancrypt.rsa">
 <span id="rsa-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">rsa</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.rsa" title="Permalink to this headline">¶</a></h2>
-<p>Created on 26 sep 2013</p>
-<p>&#64;author: Marcus</p>
-<div class="section" id="rsa">
-<h3>RSA<a class="headerlink" href="#rsa" title="Permalink to this headline">¶</a></h3>
 <p>Module for RSA encryption and decryption.</p>
-<div class="section" id="id3">
-<h4>Example<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
-<p>&gt; e = RSA()</p>
-<p>&gt; c = e.encrypt(bytearray(&#8216;Hi&#8217;, &#8216;utf-8&#8217;), e.makeKeyObject(78563, public=57691))</p>
-<p>&gt; m = e.decrypt(bytearray(b&#8217;xab-x00&#8217;), e.makeKeyObject(78563, private=43411)).decode()</p>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="mi">57691</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;</span><span class="se">\xab</span><span class="s">-</span><span class="se">\x00</span><span class="s">&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="mi">43411</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pymaancrypt.rsa.RSA">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.rsa.</tt><tt class="descname">RSA</tt><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
-<p>classdocs</p>
-<dl class="method">
+<p>A class for encryption of bytearray using the RSA encryption scheme, the constructor takes no parameters.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="function">
 <dt id="pymaancrypt.rsa.RSA.decrypt">
-<tt class="descname">decrypt</tt><big>(</big><em>message</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.decrypt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decrypt</tt><big>(</big><em>self</em>, <em>message</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.decrypt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypts a RSA-message and returns it represented as an integer
 m = c ^ d (mod n)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;</span><span class="se">\xab</span><span class="s">-</span><span class="se">\x00</span><span class="s">&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="mi">43411</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; The message to decrypt in the form of a bytearray. Size of message must be same size as the binary represenation of N in the key.</li>
+<li><strong>keyobj</strong> &#8211; The key in the form of the internal representation returned by <a class="reference internal" href="#pymaancrypt.rsa.RSA.makeKeyObject" title="pymaancrypt.rsa.RSA.makeKeyObject"><tt class="xref py py-meth docutils literal"><span class="pre">makeKeyObject()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray of less than the size of <cite>keyobj.getMaxBlockLength()</cite> in bits.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;</span><span class="se">\xab</span><span class="s">-</span><span class="se">\x00</span><span class="s">&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="mi">43411</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 <span class="go">&#39;Hi&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.rsa.RSA.encrypt">
-<tt class="descname">encrypt</tt><big>(</big><em>message</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.encrypt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">encrypt</tt><big>(</big><em>self</em>, <em>message</em>, <em>keyobj</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.encrypt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encrypts a message represented as bytearray using RSA
 c = m ^ e (mod n)</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="mi">57691</span><span class="p">))</span>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>message</strong> &#8211; The message to encrypt in the form of a bytearray. Size of message must be less than <cite>keyobj.getMaxBlockLength()</cite> in bits.</li>
+<li><strong>keyobj</strong> &#8211; The key in the form of the internal representation returned by <a class="reference internal" href="#pymaancrypt.rsa.RSA.makeKeyObject" title="pymaancrypt.rsa.RSA.makeKeyObject"><tt class="xref py py-meth docutils literal"><span class="pre">makeKeyObject()</span></tt></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A bytearray of the same size as the binary represenation of N in the key.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="s">&#39;Hi&#39;</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="mi">57691</span><span class="p">))</span>
 <span class="go">bytearray(b&#39;\xab-\x00&#39;)</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.rsa.RSA.generatePrivatePublicKey">
-<tt class="descname">generatePrivatePublicKey</tt><big>(</big><em>bits</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.generatePrivatePublicKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.generatePrivatePublicKey" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an object containing both public and private random keys.</p>
-<p>Number of bits generated N is returned is: bits+1 &lt;= result &lt;= bits+2</p>
+<tt class="descname">generatePrivatePublicKey</tt><big>(</big><em>self</em>, <em>bits</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.generatePrivatePublicKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.generatePrivatePublicKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an object containing both public and private random keys. It uses the same internal format as the <a class="reference internal" href="#pymaancrypt.rsa.RSA.makeKeyObject" title="pymaancrypt.rsa.RSA.makeKeyObject"><tt class="xref py py-meth docutils literal"><span class="pre">makeKeyObject()</span></tt></a> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bits</strong> &#8211; The maximum bitsize of any message to be enrypted with this string,</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An internal representation of the key.</td>
+</tr>
+</tbody>
+</table>
+<p>Number of bits (of N) that is generated is: bits+1 &lt;= result &lt;= bits+2</p>
 <p>The generated key is large enough so that the maximum block length 
 is guaranteed be at least &#8216;bits&#8217; long (this means that N may actually
 be 1-2 bits larger than &#8216;bits&#8217;</p>
 <p>1-2 is because there is a fifty percent probability of the most significant 
 bit beeing a 0, which is not counted when represented as a number.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">generatePrivatePublicKey</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
+<p>Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">generatePrivatePublicKey</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">key</span><span class="o">.</span><span class="n">getPublicKey</span><span class="p">(),</span> <span class="nb">int</span><span class="p">)</span>
 <span class="go">True</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span> <span class="n">key</span><span class="o">.</span><span class="n">getPrivateKey</span><span class="p">(),</span> <span class="nb">int</span><span class="p">)</span>
@@ -612,20 +984,44 @@ bit beeing a 0, which is not counted when represented as a number.</p>
 <span class="go">512</span>
 </pre></div>
 </div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">RSA</span><span class="p">()</span><span class="o">.</span><span class="n">generatePrivatePublicKey</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">getMaxBlockLength</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">generatePrivatePublicKey</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">getMaxBlockLength</span><span class="p">()</span>
 <span class="go">16</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.rsa.RSA.makeKeyObject">
-<tt class="descname">makeKeyObject</tt><big>(</big><em>n</em>, <em>public=None</em>, <em>private=None</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.makeKeyObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.makeKeyObject" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an object containing both public and private random keys.</p>
+<tt class="descname">makeKeyObject</tt><big>(</big><em>self</em>, <em>n</em>, <em>public=None</em>, <em>private=None</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#RSA.makeKeyObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.RSA.makeKeyObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an object containing both public and private keys.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>n</strong> &#8211; N in the RSA encryption scheme.</li>
+<li><strong>public</strong> &#8211; The public part of the key (may be None).</li>
+<li><strong>private</strong> &#8211; The private part of the key (may be None).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A object containing the required information of an RSA key.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <p>Please note that one of public and private keys may be None, but not both.</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="mi">57691</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="mi">43411</span><span class="p">)</span>
+<p>Examples:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">RSA</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">makeKeyObject</span><span class="p">(</span><span class="mi">78563</span><span class="p">,</span> <span class="n">public</span><span class="o">=</span><span class="mi">57691</span><span class="p">,</span> <span class="n">private</span><span class="o">=</span><span class="mi">43411</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">key</span><span class="o">.</span><span class="n">getMaxBlockLength</span><span class="p">()</span>
 <span class="go">16</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span><span class="o">.</span><span class="n">getPublicKey</span><span class="p">()</span>
+<span class="go">57691</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span><span class="o">.</span><span class="n">getPrivateKey</span><span class="p">()</span>
+<span class="go">43411</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span><span class="o">.</span><span class="n">getN</span><span class="p">()</span>
+<span class="go">78563</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -635,20 +1031,41 @@ bit beeing a 0, which is not counted when represented as a number.</p>
 <dl class="function">
 <dt id="pymaancrypt.rsa.testmodule">
 <tt class="descclassname">pymaancrypt.rsa.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/rsa.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.rsa.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 </div>
-</div>
-</div>
 <div class="section" id="module-pymaancrypt.snippets">
 <span id="snippets-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">snippets</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.snippets" title="Permalink to this headline">¶</a></h2>
-<p>Created on 19 sep 2013</p>
-<p>&#64;author: Alexander</p>
+<p>Module containing arbitrary help functions</p>
 <dl class="function">
 <dt id="pymaancrypt.snippets.testmodule">
 <tt class="descclassname">pymaancrypt.snippets.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/snippets.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.snippets.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -677,51 +1094,74 @@ bit beeing a 0, which is not counted when represented as a number.</p>
 </div>
 <div class="section" id="module-pymaancrypt.transposition">
 <span id="transposition-module"></span><h2><tt class="xref py py-mod docutils literal"><span class="pre">transposition</span></tt> Module<a class="headerlink" href="#module-pymaancrypt.transposition" title="Permalink to this headline">¶</a></h2>
-<p>Created on 19 sep 2013</p>
-<p>&#64;author: Alexander</p>
-<div class="section" id="column-transposition-cipher">
-<h3>Column Transposition Cipher<a class="headerlink" href="#column-transposition-cipher" title="Permalink to this headline">¶</a></h3>
 <p>Module for column transposition cipher encryption and decryption</p>
-<div class="section" id="id4">
-<h4>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
-<p>&gt; e = ColumnTranspositionCipher(encoder.EncoderSV)</p>
-<p>&gt; c = e.encrypt(&#8220;HEMLIGT&#8221;, &#8220;Vi rymmer i gryningen. Glöm inte stegen.&#8221;)</p>
-<p>&gt; m = e.decrypt(&#8220;HEMLIGT&#8221;, c)</p>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">m</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pymaancrypt.transposition.ColumnTranspositionCipher">
 <em class="property">class </em><tt class="descclassname">pymaancrypt.transposition.</tt><tt class="descname">ColumnTranspositionCipher</tt><big>(</big><em>encoderClass</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#ColumnTranspositionCipher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.ColumnTranspositionCipher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">builtins.object</span></tt></p>
 <p>Provides encryption and decryption mechanics using the 
 &#8220;Transposition Cipher&#8221; algorihtm</p>
-<dl class="method">
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>encoderClass</strong> &#8211; Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="function">
 <dt id="pymaancrypt.transposition.ColumnTranspositionCipher.decrypt">
-<tt class="descname">decrypt</tt><big>(</big><em>key</em>, <em>encrypteddata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#ColumnTranspositionCipher.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.ColumnTranspositionCipher.decrypt" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">decrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>encrypteddata</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#ColumnTranspositionCipher.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.ColumnTranspositionCipher.decrypt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decrypt data.
 key: string
 ciphermessage: string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;</span><span class="p">)</span>
 <span class="go">&#39;VIRYMMERIGRYNINGENGLÖMINTESTEGEN&#39;</span>
 </pre></div>
 </div>
 <p>Each character in key is only used once, thus the following is equivalent</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRETS&quot;</span><span class="p">,</span> <span class="s">&quot;ATBADFGRDAGFDSG&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRT&quot;</span><span class="p">,</span> <span class="s">&quot;ATBADFGRDAGFDSG&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderEN</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRETS&quot;</span><span class="p">,</span> <span class="s">&quot;ATBADFGRDAGFDSG&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="s">&quot;SECRT&quot;</span><span class="p">,</span> <span class="s">&quot;ATBADFGRDAGFDSG&quot;</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 </dd></dl>
 
-<dl class="method">
+<dl class="function">
 <dt id="pymaancrypt.transposition.ColumnTranspositionCipher.encrypt">
-<tt class="descname">encrypt</tt><big>(</big><em>key</em>, <em>input</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#ColumnTranspositionCipher.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.ColumnTranspositionCipher.encrypt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Encrypt data.
-key: string
-plaindata: text string</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
+<tt class="descname">encrypt</tt><big>(</big><em>self</em>, <em>key</em>, <em>plaintext</em><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#ColumnTranspositionCipher.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.ColumnTranspositionCipher.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> &#8211; string</li>
+<li><strong>plaintext</strong> &#8211; string</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;HEMLIGT&quot;</span><span class="p">,</span> <span class="s">&quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;</span><span class="p">)</span>
 <span class="go">&#39;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&#39;</span>
 </pre></div>
 </div>
 <p>Each character in key is only used once, thus the following is True</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRETS&quot;</span><span class="p">,</span> <span class="s">&quot;ENCRYPT ME NOW&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRT&quot;</span><span class="p">,</span> <span class="s">&quot;ENCRYPT ME NOW&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderEN</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRETS&quot;</span><span class="p">,</span> <span class="s">&quot;ENCRYPT ME NOW&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="s">&quot;SECRT&quot;</span><span class="p">,</span> <span class="s">&quot;ENCRYPT ME NOW&quot;</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
@@ -732,11 +1172,21 @@ plaindata: text string</p>
 <dl class="function">
 <dt id="pymaancrypt.transposition.testmodule">
 <tt class="descclassname">pymaancrypt.transposition.</tt><tt class="descname">testmodule</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/pymaancrypt/transposition.html#testmodule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymaancrypt.transposition.testmodule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Should return (#failed, #tried)</p>
+<dd><p>This launches the doctests in this module.</p>
+<p>Anyone who wants to run tests on this module separately should call this function.</p>
+<p>It takes no arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Tuple containing the number of failed testcases followed by the total number of testcases tried.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python"><pre>return (#failed, #tried)</pre>
+</div>
 </dd></dl>
 
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
@@ -757,52 +1207,16 @@ plaindata: text string</p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Welcome to Py-Maan-Crypt&#8217;s documentation!</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#pymaancrypt-package">pymaancrypt Package</a><ul>
 <li><a class="reference internal" href="#module-pymaancrypt.blockmodes"><tt class="docutils literal"><span class="pre">blockmodes</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-pymaancrypt.caesar"><tt class="docutils literal"><span class="pre">caesar</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#caesar-cipher">Caesar cipher</a><ul>
-<li><a class="reference internal" href="#example">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-pymaancrypt.encoder"><tt class="docutils literal"><span class="pre">encoder</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#encoder">Encoder</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#module-pymaancrypt.caesar"><tt class="docutils literal"><span class="pre">caesar</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-pymaancrypt.encoder"><tt class="docutils literal"><span class="pre">encoder</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-pymaancrypt.mathfuncs"><tt class="docutils literal"><span class="pre">mathfuncs</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-pymaancrypt.monoalphasubstitution"><tt class="docutils literal"><span class="pre">monoalphasubstitution</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#monoalphabetic-substitution-cipher">Monoalphabetic substitution cipher</a><ul>
-<li><a class="reference internal" href="#id1">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-pymaancrypt.onetimepad"><tt class="docutils literal"><span class="pre">onetimepad</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#one-time-pad-cipher">One time pad cipher</a><ul>
-<li><a class="reference internal" href="#id2">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#module-pymaancrypt.rsa"><tt class="docutils literal"><span class="pre">rsa</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#rsa">RSA</a><ul>
-<li><a class="reference internal" href="#id3">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#module-pymaancrypt.monoalphasubstitution"><tt class="docutils literal"><span class="pre">monoalphasubstitution</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-pymaancrypt.onetimepad"><tt class="docutils literal"><span class="pre">onetimepad</span></tt> Module</a></li>
+<li><a class="reference internal" href="#module-pymaancrypt.rsa"><tt class="docutils literal"><span class="pre">rsa</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-pymaancrypt.snippets"><tt class="docutils literal"><span class="pre">snippets</span></tt> Module</a></li>
 <li><a class="reference internal" href="#module-pymaancrypt.testsuite"><tt class="docutils literal"><span class="pre">testsuite</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-pymaancrypt.transposition"><tt class="docutils literal"><span class="pre">transposition</span></tt> Module</a><ul>
-<li><a class="reference internal" href="#column-transposition-cipher">Column Transposition Cipher</a><ul>
-<li><a class="reference internal" href="#id4">Example</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#module-pymaancrypt.transposition"><tt class="docutils literal"><span class="pre">transposition</span></tt> Module</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Module containing mathematical help functions
+Module containing mathematical help functions.
+
+These functions are designed to be used standalone, so the following import should work just fine::
+    
+    from pymaancrypt.mathfuncs import millerRabinPrimalityTest
+
+    result = millerRabinPrimalityTest(12345)
+
 """
 import random
 import math
@@ -88,6 +95,11 @@ def getRandomPrime(bits):
 def gcd(a, b):
     """
     Caclulates the gcd of two numbers.
+
+    Example:
+
+    >>> gcd(1235437658, 876342)
+    2
     """
     return egcd(a, b)[0]
 
@@ -98,6 +110,12 @@ def egcd(a, b):
 
     source code taken from:
     http://en.wikibooks.org/wiki/Algorithm_Implementation/Mathematics/Extended_Euclidean_algorithm
+
+    Example: 
+
+    >>> egcd(1235437658, 876342)
+    (2, -113363, 159815368)
+
     """
     x,y, u,v = 0,1, 1,0
     while a != 0:
@@ -127,7 +145,17 @@ def floorPowerOf(a, p):
 
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys

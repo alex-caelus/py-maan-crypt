@@ -6,6 +6,8 @@ Module for text encoding
 class BaseEncoder:
     """
     Text encoder base class
+
+    :param text: The string to be encoded (encapsulated)
     """
     unencoded = ''
     encoded = ''
@@ -59,7 +61,7 @@ class BaseEncoder:
             
 class EncoderEN(BaseEncoder):
     """
-    Encodes english text
+    Encodes english text.
     
     >>> EncoderEN("This is a (1) english text!").getEncoded()
     'THISISAENGLISHTEXT'
@@ -174,7 +176,17 @@ class EncoderSV(BaseEncoder):
 
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys

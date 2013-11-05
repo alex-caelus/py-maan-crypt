@@ -12,11 +12,11 @@ Example
 from . import encoder
 
 class Caesar(object):
-    '''
-    classdocs
-    '''
-    encoder = None
-    alphabet = None
+    """
+    Encryptor class for the Caesar encryption scheme
+
+    :param encoderClass: Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.
+    """
 
     def __init__(self, encoderClass):
         """
@@ -28,10 +28,11 @@ class Caesar(object):
     def encrypt(self, key, plaintext):
         """
         Encrypt data
-        key: integer
-        plaintext: string
+
+        :param key: integer
+        :param plaintext: string
         
-        >>> e.encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
+        >>> Caesar(encoder.EncoderSV).encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
         'YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ'
         """
         
@@ -48,7 +49,7 @@ class Caesar(object):
         key: integer
         ciphertext: string
         
-        >>> e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
+        >>> Caesar(encoder.EncoderSV).decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
         'VIRYMMERIGRYNINGENGLÖMINTESTEGEN'
         """
         
@@ -64,7 +65,7 @@ class Caesar(object):
         """
         Shifts the supplied character, the amount of steps specified by key, to the right
         
-        >>> e.shift('A', 3)
+        >>> Caesar(encoder.EncoderSV).shift('A', 3)
         'D'
         """
         charIndex = self.alphabet.find(character.upper())
@@ -73,12 +74,22 @@ class Caesar(object):
 
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': Caesar(encoder.EncoderSV)})
+    return doctest.testmod(m=thismodule)
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:

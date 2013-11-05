@@ -2,7 +2,7 @@
 Module for RSA encryption and decryption.
 
 Example
--------
+
 >>> e = RSA()
 >>> c = e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
 >>> m = e.decrypt(bytearray(b'\\xab-\\x00'), e.makeKeyObject(78563, private=43411)).decode()
@@ -14,9 +14,10 @@ from . import mathfuncs
 
 class RSA(object):
     """
-    classdocs
-    """
+    A class for encryption of bytearray using the RSA encryption scheme, the constructor takes no parameters.
 
+    >>> e = RSA()
+    """
 
     def __init__(self):
         """
@@ -28,6 +29,13 @@ class RSA(object):
         Encrypts a message represented as bytearray using RSA
         c = m ^ e (mod n)
         
+        :param message: The message to encrypt in the form of a bytearray. Size of message must be less than `keyobj.getMaxBlockLength()` in bits.
+        :param keyobj: The key in the form of the internal representation returned by :meth:`makeKeyObject`
+        :returns: A bytearray of the same size as the binary represenation of N in the key.
+
+        Example
+
+        >>> e = RSA()
         >>> e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
         bytearray(b'\\xab-\\x00')
         """
@@ -47,6 +55,11 @@ class RSA(object):
         Decrypts a RSA-message and returns it represented as an integer
         m = c ^ d (mod n)
         
+        :param message: The message to decrypt in the form of a bytearray. Size of message must be same size as the binary represenation of N in the key.
+        :param keyobj: The key in the form of the internal representation returned by :meth:`makeKeyObject`
+        :returns: A bytearray of less than the size of `keyobj.getMaxBlockLength()` in bits.
+        
+        >>> e = RSA()
         >>> e.decrypt(bytearray(b'\\xab-\\x00'), e.makeKeyObject(78563, private=43411)).decode()
         'Hi'
         """
@@ -64,9 +77,12 @@ class RSA(object):
 
     def generatePrivatePublicKey(self, bits):
         """
-        Returns an object containing both public and private random keys.
+        Returns an object containing both public and private random keys. It uses the same internal format as the :meth:`makeKeyObject` method.
 
-        Number of bits generated N is returned is: bits+1 <= result <= bits+2
+        :param bits: The maximum bitsize of any message to be enrypted with this string,
+        :returns: An internal representation of the key.
+
+        Number of bits (of N) that is generated is: bits+1 <= result <= bits+2
 
         The generated key is large enough so that the maximum block length 
         is guaranteed be at least 'bits' long (this means that N may actually
@@ -74,7 +90,10 @@ class RSA(object):
 
         1-2 is because there is a fifty percent probability of the most significant 
         bit beeing a 0, which is not counted when represented as a number.
+        
+        Examples
 
+        >>> e = RSA()
         >>> key = e.generatePrivatePublicKey(512)
         >>> isinstance( key.getPublicKey(), int)
         True
@@ -85,7 +104,7 @@ class RSA(object):
         >>> key.getMaxBlockLength()
         512
 
-        >>> RSA().generatePrivatePublicKey(16).getMaxBlockLength()
+        >>> e.generatePrivatePublicKey(16).getMaxBlockLength()
         16
         """
 
@@ -123,14 +142,27 @@ class RSA(object):
 
     def makeKeyObject(self, n, public=None, private=None):
         """
-        Returns an object containing both public and private random keys.
+        Returns an object containing both public and private keys.
+
+        :param n: N in the RSA encryption scheme.
+        :param public: The public part of the key (may be None).
+        :param private: The private part of the key (may be None).
+        :returns: A object containing the required information of an RSA key.
 
         Please note that one of public and private keys may be None, but not both.
 
+        Examples:
+        
+        >>> e = RSA()
         >>> key = e.makeKeyObject(78563, public=57691, private=43411)
         >>> key.getMaxBlockLength()
         16
-
+        >>> key.getPublicKey()
+        57691
+        >>> key.getPrivateKey()
+        43411
+        >>> key.getN()
+        78563
         """
 
         class Key:
@@ -182,15 +214,24 @@ class RSA(object):
 
 
 
-        
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': RSA()})
+    return doctest.testmod(m=thismodule)
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:

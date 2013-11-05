@@ -17,24 +17,30 @@ class MonoAlphaSubstitution(object):
     """
     Provides encryption and decryption mechanics using the 
     "Mono-Alphabetic Substitution Cipher" algorihtm
+
+    :param encoderClass: Specifies which encoder to use when encoding before encryption. It also specifies the alphabet that is to be used when encrypting and decrypting.
+
+    >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
+
     """
 
     def __init__(self, encoderClass):
         """
         Constructor
-
-        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
-
         """
         self.encoderClass = encoderClass
         
     def encrypt(self, keyobj, plaindata):
         """
-        Encrypt data.
-        Arguments:
-        key: scrambled list of the alphabeth to be used as key
-        plaindata: string
-                
+        Encrypts a string.
+
+        :param keyobj: Special object as returned by :meth:`makeKey` method
+        :param plaindata: string to encrypt
+        :returns: string
+         
+        Examples: 
+
+        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
         >>> e.encrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), "Kryptera mig, åäö!")
         'BIÄÖLOIEMDCXUJ'
 
@@ -57,8 +63,13 @@ class MonoAlphaSubstitution(object):
         """
         Decrypt data.
         
-        Here follows some usage examples:
+        :param keyobj: Special object as returned by :meth:`makeKey` method
+        :param cipherdata: string to decrypt
+        :returns: string
 
+        Examples:
+        
+        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
         >>> key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
         >>> e.decrypt(key, 'BIÄÖLOIEMDCXUJ')
         'KRYPTERAMIGÅÄÖ'
@@ -66,18 +77,23 @@ class MonoAlphaSubstitution(object):
         
         return self.encrypt(keyobj['inverted'], cipherdata)
 
-    def makeKey(self, input):
+    def makeKey(self, key):
         """
-        takes a encoder.BaseEncoder derived object and converts it to a dictionary with original alphabet as index
+        Takes a alphabet as a string and converts it to a dictionary with the standard alphabet as index.
+
+        :param key: String containing the entire alphabet in a random order.
+        :returns: Internal representation of a key, as used by the :meth:`encrypt` and :meth:`decrypt` methods.
 
         Example:
+        
+        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
         >>> key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
         >>> key['key'] == {'A': 'E', 'B': 'N', 'C': 'K', 'D': 'R', 'E': 'O', 'F': 'Y', 'G': 'C', 'H': 'V', 'I': 'D', 'J': 'Q', 'K': 'B', 'L': 'F', 'M': 'M', 'N': 'Z', 'O': 'S', 'P': 'Ö', 'Q': 'A', 'R': 'I', 'S': 'Å', 'T': 'L', 'U': 'W', 'V': 'H', 'W': 'P', 'X': 'G', 'Y': 'Ä', 'Z': 'T', 'Ä': 'U', 'Å': 'X', 'Ö': 'J'}
         True
         """
-        input = self.encoderClass(input)
-        inputString = input.getEncoded()
-        alphabet = list(input.getAlphabet())
+        key = self.encoderClass(key)
+        inputString = key.getEncoded()
+        alphabet = list(key.getAlphabet())
         alphabetLen = len(alphabet)
         i = 0
         keyobj = {'key': {}}
@@ -98,8 +114,13 @@ class MonoAlphaSubstitution(object):
             
     def generateRandomKey(self):
         """
-        Generates a random key form the alphabet of the specified encoder
+        Generates a random key from the alphabet of the specified encoder (in constructor)
 
+        :returns: Internal representation of a key, as used by the :meth:`encrypt` and :meth:`decrypt` methods.
+
+        Example:
+        
+        >>> e = MonoAlphaSubstitution(encoder.EncoderSV)
         >>> len(e.generateRandomKey()['key'])
         29
         """
@@ -109,12 +130,22 @@ class MonoAlphaSubstitution(object):
 
 def testmodule():
     """
-    Should return (#failed, #tried)
+    This launches the doctests in this module. 
+
+    Anyone who wants to run tests on this module separately should call this function.
+
+    It takes no arguments.
+
+    :returns: Tuple containing the number of failed testcases followed by the total number of testcases tried.
+
+    ::
+    
+        return (#failed, #tried)
     """
     import doctest
     import sys
     thismodule = sys.modules[__name__]
-    return doctest.testmod(m=thismodule, extraglobs={'e': MonoAlphaSubstitution(encoder.EncoderSV)})
+    return doctest.testmod(m=thismodule)
 
 if __name__ == "__main__":
     if testmodule()[0] == 0:
