@@ -3,6 +3,20 @@
 Created on 12 sep 2013
 
 @author: Alexander
+
+Monoalphabetic substitution cipher
+==================================
+
+Module for mono-alphabetic substitution encryption and decryption
+
+Example
+-------
+
+> e = MonoAlphaSubstitution(encoder.EncoderSV)
+
+> c = e.encrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), "Kryptera mig, åäö!")
+
+> m = e.decrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), c)
 """
 
 import random

@@ -3,6 +3,20 @@
 Created on 24 sep 2013
 
 @author: Marcus
+
+One time pad cipher
+===================
+
+Module for One time pad encryption and decryption
+
+Example
+-------
+
+> e = OneTimePad(encoder.EncoderEN)
+
+> c = e.encrypt("SECRET", "Hello world!")
+
+> m = e.decrypt("SECRET", c)
 '''
 from random import randint
 
