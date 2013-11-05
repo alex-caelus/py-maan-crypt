@@ -6,7 +6,7 @@ Yet another python crypto library
 Documentation
 -------------
 
-The complete documentation for this project resides in documentation/html/index.html
+The complete documentation for this project resides in `documentation/html/index.html`
 
 Directory structure
 -------------------
