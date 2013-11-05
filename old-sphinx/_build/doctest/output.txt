@@ -1,0 +1,500 @@
+Results of doctest builder run on 2013-11-05 10:21:21
+=====================================================
+
+Document: index
+---------------
+**********************************************************************
+File "index.rst", line 9, in default
+Failed example:
+    if True:
+        e = __DummyEncryptor__()
+        ecb = ECB(e, 32)
+        ecb.decryptToString(bytearray('This is a test\x00\x00', 'utf-8'), None)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 2, in <module>
+        e = __DummyEncryptor__()
+    NameError: name '__DummyEncryptor__' is not defined
+**********************************************************************
+File "index.rst", line 13, in default
+Failed example:
+    if True:
+        e = __DummyEncryptor__()
+        ecb = ECB(e, 32)
+        c = ecb.encryptFromString('This is a test', None)
+        c.decode()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 2, in <module>
+        e = __DummyEncryptor__()
+    NameError: name '__DummyEncryptor__' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.decrypt(3, "YLUÄPPHULJUÄQLQJHQJOCPLQWHVWHJHQ")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt(3, "Vi rymmer i gryningen. Glöm inte stegen.")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    e.shift('A', 3)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.shift('A', 3)
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    EncoderEN("This is a (1) english text!").getEncoded()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderEN("This is a (1) english text!").getEncoded()
+    NameError: name 'EncoderEN' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    EncoderEN("This is a (1) english text!").getUnencoded()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderEN("This is a (1) english text!").getUnencoded()
+    NameError: name 'EncoderEN' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    EncoderEN('').getAlphabet()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderEN('').getAlphabet()
+    NameError: name 'EncoderEN' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    EncoderSV(u"Detta är en (1) svensk text1").getEncoded()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderSV(u"Detta är en (1) svensk text1").getEncoded()
+    NameError: name 'EncoderSV' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    EncoderSV(u"Detta är en (1) svensk text1").getUnencoded()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderSV(u"Detta är en (1) svensk text1").getUnencoded()
+    NameError: name 'EncoderSV' is not defined
+**********************************************************************
+File "index.rst", line 3, in default
+Failed example:
+    EncoderSV('').getAlphabet()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        EncoderSV('').getAlphabet()
+    NameError: name 'EncoderSV' is not defined
+**********************************************************************
+File "index.rst", line 15, in default
+Failed example:
+    floorPowerOf(6, 2)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        floorPowerOf(6, 2)
+    NameError: name 'floorPowerOf' is not defined
+**********************************************************************
+File "index.rst", line 17, in default
+Failed example:
+    floorPowerOf(8, 2)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[1]>", line 1, in <module>
+        floorPowerOf(8, 2)
+    NameError: name 'floorPowerOf' is not defined
+**********************************************************************
+File "index.rst", line 19, in default
+Failed example:
+    floorPowerOf(9, 2)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[2]>", line 1, in <module>
+        floorPowerOf(9, 2)
+    NameError: name 'floorPowerOf' is not defined
+**********************************************************************
+File "index.rst", line 21, in default
+Failed example:
+    floorPowerOf(31.99, 2)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[3]>", line 1, in <module>
+        floorPowerOf(31.99, 2)
+    NameError: name 'floorPowerOf' is not defined
+**********************************************************************
+File "index.rst", line 6, in default
+Failed example:
+    p = getRandomPrime(5)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        p = getRandomPrime(5)
+    NameError: name 'getRandomPrime' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    p >= 16 and p < 32
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[1]>", line 1, in <module>
+        p >= 16 and p < 32
+    NameError: name 'p' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    [x for x in range(901, 1000) if millerRabinPrimalityTest(x)]
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        [x for x in range(901, 1000) if millerRabinPrimalityTest(x)]
+      File "<doctest default[0]>", line 1, in <listcomp>
+        [x for x in range(901, 1000) if millerRabinPrimalityTest(x)]
+    NameError: global name 'millerRabinPrimalityTest' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    millerRabinPrimalityTest(643808006803554439230129854961492699151386107534013432918073439524138264842370630061369715394739134090922937332590384720397133335969549256322620979036686633213903952966175107096769180017646161851573147596390153)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        millerRabinPrimalityTest(643808006803554439230129854961492699151386107534013432918073439524138264842370630061369715394739134090922937332590384720397133335969549256322620979036686633213903952966175107096769180017646161851573147596390153)
+    NameError: name 'millerRabinPrimalityTest' is not defined
+**********************************************************************
+File "index.rst", line 11, in default
+Failed example:
+    millerRabinPrimalityTest(743808006803554439230129854961492699151386107534013432918073439524138264842370630061369715394739134090922937332590384720397133335969549256322620979036686633213903952966175107096769180017646161851573147596390153)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        millerRabinPrimalityTest(743808006803554439230129854961492699151386107534013432918073439524138264842370630061369715394739134090922937332590384720397133335969549256322620979036686633213903952966175107096769180017646161851573147596390153)
+    NameError: name 'millerRabinPrimalityTest' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        key = e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 9, in default
+Failed example:
+    e.decrypt(key, 'BIÄÖLOIEMDCXUJ')
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[1]>", line 1, in <module>
+        e.decrypt(key, 'BIÄÖLOIEMDCXUJ')
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    e.encrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), "Kryptera mig, åäö!")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt(e.makeKey("ENKROYCVDQBFMZSÖAIÅLWHPGÄTXUJ"), "Kryptera mig, åäö!")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    len(e.generateRandomKey()['key'])
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        len(e.generateRandomKey()['key'])
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.decrypt("SECRET", "KMTMQCWVKXVOCMPXIDYPBAMDIIUHIZWR")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.encrypt("SECRET", "Vi rymmer i gryningen. Glöm inte stegen.")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt("SECRET", "Vi rymmer i gryningen. Glöm inte stegen.")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    len(e.generateRandomKey(15))
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        len(e.generateRandomKey(15))
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 6, in default
+Failed example:
+    e.decrypt(bytearray(b'\xab-\x00'), e.makeKeyObject(78563, private=43411)).decode()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.decrypt(bytearray(b'\xab-\x00'), e.makeKeyObject(78563, private=43411)).decode()
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 6, in default
+Failed example:
+    e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt(bytearray('Hi', 'utf-8'), e.makeKeyObject(78563, public=57691))
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 21, in default
+Failed example:
+    key = e.generatePrivatePublicKey(512)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        key = e.generatePrivatePublicKey(512)
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 22, in default
+Failed example:
+    isinstance( key.getPublicKey(), int)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[1]>", line 1, in <module>
+        isinstance( key.getPublicKey(), int)
+    NameError: name 'key' is not defined
+**********************************************************************
+File "index.rst", line 24, in default
+Failed example:
+    isinstance( key.getPrivateKey(), int)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[2]>", line 1, in <module>
+        isinstance( key.getPrivateKey(), int)
+    NameError: name 'key' is not defined
+**********************************************************************
+File "index.rst", line 26, in default
+Failed example:
+    key.getN().bit_length()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[3]>", line 1, in <module>
+        key.getN().bit_length()
+    NameError: name 'key' is not defined
+**********************************************************************
+File "index.rst", line 28, in default
+Failed example:
+    key.getMaxBlockLength()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[4]>", line 1, in <module>
+        key.getMaxBlockLength()
+    NameError: name 'key' is not defined
+**********************************************************************
+File "index.rst", line 24, in default
+Failed example:
+    RSA().generatePrivatePublicKey(16).getMaxBlockLength()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        RSA().generatePrivatePublicKey(16).getMaxBlockLength()
+    NameError: name 'RSA' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    key = e.makeKeyObject(78563, public=57691, private=43411)
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        key = e.makeKeyObject(78563, public=57691, private=43411)
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 9, in default
+Failed example:
+    key.getMaxBlockLength()
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[1]>", line 1, in <module>
+        key.getMaxBlockLength()
+    NameError: name 'key' is not defined
+**********************************************************************
+File "index.rst", line 5, in default
+Failed example:
+    uniquify("HELLO")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        uniquify("HELLO")
+    NameError: name 'uniquify' is not defined
+**********************************************************************
+File "index.rst", line 8, in default
+Failed example:
+    uniquify((1, 3, 5, 2, 6, 3, 4, 2, 1, 4, 5, 3, 6))
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        uniquify((1, 3, 5, 2, 6, 3, 4, 2, 1, 4, 5, 3, 6))
+    NameError: name 'uniquify' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.decrypt("HEMLIGT", encoder.EncoderSV("IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT"))
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.decrypt("HEMLIGT", encoder.EncoderSV("IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT"))
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 12, in default
+Failed example:
+    e.decrypt("SECRETS", encoder.EncoderEN("ATBADFGRDAGFDSG")) == e.decrypt("SECRT", encoder.EncoderEN("ATBADFGRDAGFDSG"))
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.decrypt("SECRETS", encoder.EncoderEN("ATBADFGRDAGFDSG")) == e.decrypt("SECRT", encoder.EncoderEN("ATBADFGRDAGFDSG"))
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 7, in default
+Failed example:
+    e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt("HEMLIGT", "Vi rymmer i gryningen. Glöm inte stegen.")
+    NameError: name 'e' is not defined
+**********************************************************************
+File "index.rst", line 12, in default
+Failed example:
+    e.encrypt("SECRETS", "ENCRYPT ME NOW") == e.encrypt("SECRT", "ENCRYPT ME NOW")
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Python33\Lib\doctest.py", line 1287, in __run
+        compileflags, 1), test.globs)
+      File "<doctest default[0]>", line 1, in <module>
+        e.encrypt("SECRETS", "ENCRYPT ME NOW") == e.encrypt("SECRT", "ENCRYPT ME NOW")
+    NameError: name 'e' is not defined
+**********************************************************************
+1 items had failures:
+  43 of  43 in default
+43 tests in 1 items.
+0 passed and 43 failed.
+***Test Failed*** 43 failures.
+
+Doctest summary
+===============
+   43 tests
+   43 failures in tests
+    0 failures in setup code
+    0 failures in cleanup code

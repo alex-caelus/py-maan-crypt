@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymaancrypt.transposition &mdash; Py-Maan-Crypt 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Py-Maan-Crypt 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Py-Maan-Crypt 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pymaancrypt.transposition</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on 19 sep 2013</span>
+
+<span class="sd">@author: Alexander</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">encoder</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">snippets</span>
+
+<div class="viewcode-block" id="ColumnTranspositionCipher"><a class="viewcode-back" href="../../index.html#pymaancrypt.transposition.ColumnTranspositionCipher">[docs]</a><span class="k">class</span> <span class="nc">ColumnTranspositionCipher</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides encryption and decryption mechanics using the </span>
+<span class="sd">    &quot;Transposition Cipher&quot; algorihtm</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoderClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+
+<span class="sd">        &gt;&gt;&gt; e = ColumnTranspositionCipher(encoder.EncoderSV)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoderClass</span> <span class="o">=</span> <span class="n">encoderClass</span>
+        
+<div class="viewcode-block" id="ColumnTranspositionCipher.encrypt"><a class="viewcode-back" href="../../index.html#pymaancrypt.transposition.ColumnTranspositionCipher.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">input</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encrypt data.</span>
+<span class="sd">        key: string</span>
+<span class="sd">        plaindata: text string</span>
+
+<span class="sd">        &gt;&gt;&gt; e.encrypt(&quot;HEMLIGT&quot;, &quot;Vi rymmer i gryningen. Glöm inte stegen.&quot;)</span>
+<span class="sd">        &#39;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&#39;</span>
+
+<span class="sd">        Each character in key is only used once, thus the following is True</span>
+
+<span class="sd">        &gt;&gt;&gt; e.encrypt(&quot;SECRETS&quot;, &quot;ENCRYPT ME NOW&quot;) == e.encrypt(&quot;SECRT&quot;, &quot;ENCRYPT ME NOW&quot;)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoderClass</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">snippets</span><span class="o">.</span><span class="n">uniquify</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">getEncoded</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s">&quot;Message longer than key!&quot;</span><span class="p">)</span>
+        
+        <span class="n">sortedkey</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">table</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">getEncoded</span><span class="p">()):</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">idx</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]</span>
+            <span class="n">table</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        
+        <span class="n">encrypted</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">sortedkey</span><span class="p">:</span>
+            <span class="n">encrypted</span> <span class="o">+=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">encrypted</span>
+
+</div>
+<div class="viewcode-block" id="ColumnTranspositionCipher.decrypt"><a class="viewcode-back" href="../../index.html#pymaancrypt.transposition.ColumnTranspositionCipher.decrypt">[docs]</a>    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">encrypteddata</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decrypt data.</span>
+<span class="sd">        key: string</span>
+<span class="sd">        ciphermessage: string</span>
+
+<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;HEMLIGT&quot;, encoder.EncoderSV(&quot;IIGIGMNLSVRNMEMYGEYRNTNRGENEEIÖT&quot;))</span>
+<span class="sd">        &#39;VIRYMMERIGRYNINGENGLÖMINTESTEGEN&#39;</span>
+
+<span class="sd">        Each character in key is only used once, thus the following is equivalent</span>
+
+<span class="sd">        &gt;&gt;&gt; e.decrypt(&quot;SECRETS&quot;, encoder.EncoderEN(&quot;ATBADFGRDAGFDSG&quot;)) == e.decrypt(&quot;SECRT&quot;, encoder.EncoderEN(&quot;ATBADFGRDAGFDSG&quot;))</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ciphermessage</span> <span class="o">=</span> <span class="n">encrypteddata</span><span class="o">.</span><span class="n">getUnencoded</span><span class="p">()</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="n">snippets</span><span class="o">.</span><span class="n">uniquify</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">ciphermessage</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s">&quot;Message longer than key!&quot;</span><span class="p">)</span>
+        
+        <span class="n">sortedkey</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key</span><span class="p">}</span>
+
+        <span class="n">decrypted</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">itemspercolumn</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ciphermessage</span><span class="p">)</span><span class="o">//</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">sortedkey</span><span class="p">:</span>
+            <span class="n">overflow</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">&lt;</span>  <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ciphermessage</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">itemspercolumn</span> <span class="o">+</span> <span class="n">overflow</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">):</span>
+                <span class="n">table</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ciphermessage</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">stop</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ciphermessage</span><span class="p">)):</span>
+            <span class="n">decrypted</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="o">%</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)]][</span><span class="n">i</span><span class="o">//</span><span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)])</span>
+
+        <span class="k">return</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">decrypted</span><span class="p">)</span>
+
+
+</div></div>
+<div class="viewcode-block" id="testmodule"><a class="viewcode-back" href="../../index.html#pymaancrypt.transposition.testmodule">[docs]</a><span class="k">def</span> <span class="nf">testmodule</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Should return (#failed, #tried)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">thismodule</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">thismodule</span><span class="p">,</span> <span class="n">extraglobs</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;e&#39;</span><span class="p">:</span> <span class="n">ColumnTranspositionCipher</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">EncoderSV</span><span class="p">)})</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">testmodule</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Success!&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Py-Maan-Crypt 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alexander Nilsson, Marcus Andersson.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

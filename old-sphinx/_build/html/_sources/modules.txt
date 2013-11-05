@@ -1,0 +1,7 @@
+pymaancrypt
+===========
+
+.. toctree::
+   :maxdepth: 4
+
+   pymaancrypt

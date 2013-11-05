@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>pymaancrypt.blockmodes &mdash; Py-Maan-Crypt 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Py-Maan-Crypt 1.0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Py-Maan-Crypt 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for pymaancrypt.blockmodes</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">mathfuncs</span>
+
+
+<span class="k">class</span> <span class="nc">__DummyEncryptor__</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This dummy encryptor is only used for testing purposes and does not actually perform any encryption.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+<div class="viewcode-block" id="BaseBlockMode"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.BaseBlockMode">[docs]</a><span class="k">class</span> <span class="nc">BaseBlockMode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all block modes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encryptor</span><span class="p">,</span> <span class="n">maxBlockLength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encryptor</span> <span class="o">=</span> <span class="n">encryptor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBits</span> <span class="o">=</span> <span class="n">mathfuncs</span><span class="o">.</span><span class="n">floorPowerOf</span><span class="p">(</span> <span class="n">maxBlockLength</span><span class="p">,</span> <span class="mi">2</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBits</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBits</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s">&quot;Max Block Length must be larger than 8 bits (one byte)&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseBlockMode.encryptFromString"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.BaseBlockMode.encryptFromString">[docs]</a>    <span class="k">def</span> <span class="nf">encryptFromString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience method for encrypting a string of data, return type is bytearray</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encryptByteArray</span><span class="p">(</span><span class="nb">bytearray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">keyobj</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="BaseBlockMode.decryptToString"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.BaseBlockMode.decryptToString">[docs]</a>    <span class="k">def</span> <span class="nf">decryptToString</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience method for decrypting a bytearray, return type is utf-8 encoded string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decryptByteArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\x00</span><span class="s">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</div>
+<div class="viewcode-block" id="BaseBlockMode.encryptByteArray"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.BaseBlockMode.encryptByteArray">[docs]</a>    <span class="k">def</span> <span class="nf">encryptByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encryption method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Is abstract&quot;</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="BaseBlockMode.decryptByteArray"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.BaseBlockMode.decryptByteArray">[docs]</a>    <span class="k">def</span> <span class="nf">decryptByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decryption method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s">&quot;Is abstract&quot;</span><span class="p">)</span>
+
+
+</div></div>
+<div class="viewcode-block" id="ECB"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.ECB">[docs]</a><span class="k">class</span> <span class="nc">ECB</span><span class="p">(</span><span class="n">BaseBlockMode</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Electronic code book block encryption scheme, this is the least secure of all </span>
+<span class="sd">    block modes and should only be used for educational purposes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encryptor</span><span class="p">,</span> <span class="n">maxBlockLength</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">encryptor</span><span class="p">,</span> <span class="n">maxBlockLength</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ECB.encryptByteArray"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.ECB.encryptByteArray">[docs]</a>    <span class="k">def</span> <span class="nf">encryptByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Encrypts a variable length bytearray with the provided encryptor with the ECB</span>
+<span class="sd">        block scheme.</span>
+
+<span class="sd">        padding will be all zeroes due to the fact that encryption expects </span>
+<span class="sd">        a c-style string as payload</span>
+
+<span class="sd">        &gt;&gt;&gt; if True:</span>
+<span class="sd">        ...     e = __DummyEncryptor__()</span>
+<span class="sd">        ...     ecb = ECB(e, 32)</span>
+<span class="sd">        ...     c = ecb.encryptFromString(&#39;This is a test&#39;, None)</span>
+<span class="sd">        ...     c.decode()</span>
+<span class="sd">        &#39;This is a test\\x00\\x00&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nrOfBlocks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">))</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrOfBlocks</span><span class="p">):</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">):</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="o">+</span><span class="n">j</span>
+                <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                    <span class="n">m</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encryptor</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s">&quot;Encryptor is not symmetric! &quot;</span><span class="o">+</span>
+                        <span class="s">&quot;Block Cipher modes require encryptors &quot;</span><span class="o">+</span>
+                        <span class="s">&quot;with equal length of input &amp; output blocks.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cb</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                <span class="n">C</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cb</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">C</span>
+            
+    </div>
+<div class="viewcode-block" id="ECB.decryptByteArray"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.ECB.decryptByteArray">[docs]</a>    <span class="k">def</span> <span class="nf">decryptByteArray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Decrypts a variable length bytearray with the provided encryptor with the ECB</span>
+<span class="sd">        block scheme.</span>
+
+<span class="sd">        &gt;&gt;&gt; if True:</span>
+<span class="sd">        ...     e = __DummyEncryptor__()</span>
+<span class="sd">        ...     ecb = ECB(e, 32)</span>
+<span class="sd">        ...     ecb.decryptToString(bytearray(&#39;This is a test\\x00\\x00&#39;, &#39;utf-8&#39;), None)</span>
+<span class="sd">        &#39;This is a test&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nrOfBlocks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">))</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrOfBlocks</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="p">):</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">blockLengthBytes</span><span class="o">+</span><span class="n">j</span>
+                <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                    <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encryptor</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">keyobj</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">mb</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                <span class="n">M</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mb</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">M</span>
+
+
+    </div></div>
+<div class="viewcode-block" id="testmodule"><a class="viewcode-back" href="../../index.html#pymaancrypt.blockmodes.testmodule">[docs]</a><span class="k">def</span> <span class="nf">testmodule</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Should return (#failed, #tried)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">thismodule</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">__name__</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">m</span><span class="o">=</span><span class="n">thismodule</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">testmodule</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Success!&quot;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../index.html">Py-Maan-Crypt 1.0.0 documentation</a> &raquo;</li>
+          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Alexander Nilsson, Marcus Andersson.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
