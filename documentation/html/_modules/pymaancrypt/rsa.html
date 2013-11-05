@@ -53,6 +53,20 @@
 <span class="sd">Created on 26 sep 2013</span>
 
 <span class="sd">@author: Marcus</span>
+
+<span class="sd">RSA</span>
+<span class="sd">===</span>
+
+<span class="sd">Module for RSA encryption and decryption.</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+
+<span class="sd">&gt; e = RSA()</span>
+
+<span class="sd">&gt; c = e.encrypt(bytearray(&#39;Hi&#39;, &#39;utf-8&#39;), e.makeKeyObject(78563, public=57691))</span>
+
+<span class="sd">&gt; m = e.decrypt(bytearray(b&#39;\\xab-\\x00&#39;), e.makeKeyObject(78563, private=43411)).decode()</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">math</span>
